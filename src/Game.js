@@ -21,22 +21,22 @@ function canvasApp() {
 	
 	// load the level
 	var levelSheet = new Image();
-	levelSheet.src = "/content/projects/building_32x32.png";
+	levelSheet.src = "assets/building_32x32.png";
 	
 	// explosion sheet
 	var explosionSheet = new Image();
-	explosionSheet.src = "/content/projects/explosion.png";
+	explosionSheet.src = "assets/explosion.png";
 	
 	// egg sheet
 	var eggSheet = new Image();
-	eggSheet.src = "/content/projects/egg_sheet_sm.png";
+	eggSheet.src = "assets/egg_sheet_sm.png";
 	
 	// ufo sheet
 	var ufoSheet = new Image();
-	ufoSheet.src = "/content/projects/ufo_sheet.png";
+	ufoSheet.src = "assets/ufo_sheet.png";
 	
 	var tileSheet = new Image();
-	tileSheet.src = "/content/projects/tank_sheet_sm.png";	
+	tileSheet.src = "assets/tank_sheet_sm.png";	
 	tileSheet.addEventListener('load', eventTankLoaded, false);
 	
 	
@@ -44,16 +44,19 @@ function canvasApp() {
 	var eggs = [];
 	var ufos = [];
 	var player;
+	//var turretPos = 0;
 	var turretCnt = 14;
+	//var forwards = true;
 	var tankH = 80;
 	var tankBodyH = 37;
 	var tankW = 118;
 	var ground = 416;
 	var keyPressList = [];
-
+	//var forward = false;
+	//var backward = false;
 	var x = 100;
-	var speed = 2; // speed of the tank
-
+	var speed = 2; 			// speed of the tank
+	//var turretLen = 50;
 	var ufoDx = 4;
 	var ufoDy = 0;
 	var ufoStartX = -50;
@@ -66,6 +69,7 @@ function canvasApp() {
 	var buildingW = 5*32;
 	
 	var canonBalls = [];
+	//var turretAngle = -5; // 5 degree increments
 	var canonBallSpeed = 5.0;
 	var canonHold = 60;	// hold time to shoot another canon ball
 	var canonTimer = 0;
@@ -76,7 +80,6 @@ function canvasApp() {
 	var playerLives;	// holds the number of lives
 	var transitionAmount = 90;	// length of the transition between states	
 	var transitionCounter;	
-
 	// Game state constants
 	var GAME_STATE_PLAY = 0;
 	var GAME_STATE_DIE = 1;
@@ -96,11 +99,14 @@ function canvasApp() {
 		// check the keys
 		if (keyPressList[37] == true) {
 			if (player && player.posX > 0)
+				//x -= speed
 					player.posX -= speed;
+			//console.log("speed: ", speed);
 		}
 		if (keyPressList[39] == true) {
 			if (player && player.posX < 352-player.width) // change this from its constant valu
 					player.posX += speed;
+			//console.log("speed: ", speed);
 		}
 		// move turret up
 		if (keyPressList[38] == true) {
@@ -115,8 +121,10 @@ function canvasApp() {
 		// fire canon
 		if (keyPressList[32] == true) {
 			if (player && canonTimer == 0) {
+				
 					canonTimer = canonHold;
 					fireCanon(player.turretAngle);
+					
 			}
 		}
 		// canon velocity
@@ -157,15 +165,16 @@ function canvasApp() {
 				tempUFO.forwards = false;
 			if (tempUFO.posX < tempUFO.width/2)
 				tempUFO.forwards = true;
-			// fire ufo lasers 
+			// fire ufo lasers // fix this constant value
 			if (tempUFO.laserCounter > tempUFO.laserFrequency && tempUFO.posX < 352 && player) {
 				var targetX = player.posX + player.width/2.0; // the x position of the tank
 				var targetY = ground - player.height/2.0; // y position of tank
-				var sourceX = tempUFO.posX;
-				var sourceY = tempUFO.posY; 
+				var sourceX = tempUFO.posX; // + tempUFO.width/2.0;
+				var sourceY = tempUFO.posY; // + tempUFO.height;
 				
 				fireUFOLaser(targetX, targetY, sourceX, sourceY);
 				tempUFO.laserCounter = 0;
+				
 			}
 
 			tempUFO.draw(context);
@@ -192,12 +201,13 @@ function canvasApp() {
 			
 				// check to see if the laser hits the tank
 				if (tempUFOLaser.x > player.posX && 
-						tempUFOLaser.x < player.posX + player.hitWidth  && 
+						tempUFOLaser.x < player.posX + player.hitWidth  && //x+tankW && 
 						tempUFOLaser.y > ground-player.hitHeight && 
 						tempUFOLaser.y < ground) {
 					ufoLasers.splice(i,1);
 					explosions.push({coordinates:currentUfoLaser, frame:0});
 					die();
+					//console.log("laser destroys tank");
 				}
 				// check to see if the laser hits the ground or goes out of bounds
 				if (tempUFOLaser.y > ground) {
@@ -226,7 +236,14 @@ function canvasApp() {
 		context.fillStyle = "#000000";
 			
 		// tank
+		/*		
+		var sourceX = Math.floor(turretPos % 3) * 118;
+		var sourceY = Math.floor(turretPos / 3) * 80;
+		//console.log("sourceX: " + sourceX + ", sourceY: " + sourceY);		
+		context.drawImage(tileSheet, sourceX, sourceY, 118, 80, x, ground-tankH, 118, 80);
+		*/
 		if (player) {
+			//console.log("player.draw");
 			player.draw(context);
 		}
 	
@@ -252,13 +269,16 @@ function canvasApp() {
 				
 				var currentCanonBall = {x: tempCanonBall.x, y: tempCanonBall.y};
 				
+				
 				//check to see if it hits a building
 				if (level.checkCollision(currentCanonBall)) {
+					//console.log("explosion x: " + currentCanonBall.x + ", explosion y: " + currentCanonBall.y);
 					explosions.push({coordinates:currentCanonBall, frame:0});
 					canonBalls.splice(i,1);
 					continue;
 				}
-						
+				
+				
 				// check if canon ball hits an egg
 				for (var j=0; j < eggs.length; j++) {
 					if (eggs[j].checkCollision(currentCanonBall)) {
@@ -266,6 +286,7 @@ function canvasApp() {
 						explosions.push({coordinates:currentCanonBall, frame:0});
 						canonBalls.splice(j,1);
 						eggs.splice(j,1);
+						//egg.destroyed = true;
 						continue;
 					}
 				}
@@ -290,11 +311,18 @@ function canvasApp() {
 					canonBalls.splice(i,1);
 					continue;
 				}	
-			}		
+				//console.log("theCanvas.width: ", theCanvas.width);
+			}
+			//if (tempCanonBall.x > theCanvas.width) {
+				//console.log("yes");
+				//canonBalls.splice(i,1);
+			//}
+					
 		}
 		if (canonTimer > 0)
 			canonTimer--;
 	
+		// explosions
 		drawExplosions();
 		
 		// check if the player can go to the next level
@@ -312,12 +340,12 @@ function canvasApp() {
 	function die() {
 		playerLives--;
 		player = null;
-		// if (playerLives > 0) {
+		if (playerLives > 0) {
 			playerLostLife();			
 			currentGameState = GAME_STATE_DIE;
-		// }	
-		// else
-		// 	currentGameState = GAME_STATE_GAME_OVER;
+		}	
+		else
+			currentGameState = GAME_STATE_GAME_OVER;
 	}
 	
 	// when the player gets killed transition screen
@@ -354,15 +382,10 @@ function canvasApp() {
 			playGame();
 			console.log("still exploding");	
 		}
-		else if (transitionCounter >= transitionAmount) {
-			if (playerLives > 0) {	
-				// reset the game objects
-				resetGameObjects();
-				currentGameState = GAME_STATE_PLAY;
-			}
-			else {
-				currentGameState = GAME_STATE_GAME_OVER;
-			}
+		else if (transitionCounter >= transitionAmount) {			
+			// reset the game objects
+			resetGameObjects();
+			currentGameState = GAME_STATE_PLAY;
 		}
 		else if (currentGameState == GAME_STATE_DIE) {
 			// display the transition screen
@@ -372,10 +395,7 @@ function canvasApp() {
 			// draw some text
 			context.fillStyle = "#eeeeee";
 			context.font = "12pt Arial";
-			if (playerLives > 0)
-				context.fillText('You Died', theCanvas.width/2-25, theCanvas.height/2);
-			else
-				context.fillText('Game Over', theCanvas.width/2-25, theCanvas.height/2);
+			context.fillText('You Died', theCanvas.width/2-25, theCanvas.height/2);
 			context.fillSytle = "#000000";	
 		}
 		else if (currentGameState == GAME_STATE_NEXT_LEVEL) {
@@ -396,6 +416,7 @@ function canvasApp() {
 	function gameOver() {
 		if (explosions.length > 0) {
 			playGame();
+			console.log("still exploding");	
 		}
 		else {
 			// play again?
@@ -412,8 +433,8 @@ function canvasApp() {
 			// draw some text
 			context.fillStyle = "#eeeeee";
 			context.font = "12pt Arial";
-			context.fillText('Tank Defence', theCanvas.width/2-150, theCanvas.height/2);
-			context.fillText("Press 'p' to play", theCanvas.width/2-150, theCanvas.height/2+50);
+			context.fillText('Game Over', theCanvas.width/2-150, theCanvas.height/2);
+			context.fillText("Press 'p' to play again", theCanvas.width/2-150, theCanvas.height/2+50);
 			context.fillSytle = "#000000";	
 		}
 	}
@@ -439,6 +460,12 @@ function canvasApp() {
 				var sourceX = Math.floor(frameNumber % 6) * width; // 130 width
 				var sourceY = Math.floor(frameNumber / 6) * height; // 130 height
 				
+				//console.log("explosions:");
+				//console.log("sourceX: " + sourceX + ", sourceY: " + sourceY);
+				//console.log("width: " + width + ", height: " + height);
+				//console.log("posX: " + posX + ", posY: " + posY);
+				
+				
 				context.drawImage(explosionSheet, sourceX, sourceY, width, height, posX, posY, width, height);
 				explosions[i].frame++;
 			}
@@ -453,11 +480,18 @@ function canvasApp() {
 		console.log("rad: " + rad);
 		var xPos = player.posX + 62 + Math.cos(rad) * player.turretLength;
 		var yPos = (ground - 29) + Math.sin(rad) * player.turretLength;
+		//console.log("xPos: " + xPos);
+		//console.log("yPos: " + yPos);
+		//console.log("x: " + x);
 		var newCanonBall = {};
 		newCanonBall.x = xPos;
 		newCanonBall.y = yPos;
 		newCanonBall.dx = Math.cos(rad) * canonBallSpeed;
-		newCanonBall.dy = Math.sin(rad) * canonBallSpeed;	
+		newCanonBall.dy = Math.sin(rad) * canonBallSpeed;
+		
+		
+		//console.log(newCanonBall.dx);
+		//console.log(newCanonBall.dy);		
 		canonBalls.push(newCanonBall);
 	}
 	
@@ -477,6 +511,7 @@ function canvasApp() {
 	function gameLoop() {
 		switch (currentGameState) {
 			case GAME_STATE_PLAY:
+				//console.log("playGame()");
 				playGame();
 				break;
 			case GAME_STATE_DIE:
@@ -485,9 +520,15 @@ function canvasApp() {
 			case GAME_STATE_GAME_OVER:
 				gameOver();
 				break;
+			
 			case GAME_STATE_NEXT_LEVEL:
 				transition();
 				break;
+			/*
+			case GAME_STATE_TITLE_SCREEN:
+				titleScreen();
+				break;
+			*/
 			default:
 				break;
 		}
@@ -496,18 +537,24 @@ function canvasApp() {
 	const FRAME_RATE=30;
 	function startUp() {
 		var intervalTime = 1000/FRAME_RATE;
-		currentGameState = GAME_STATE_GAME_OVER;
+		currentGameState = GAME_STATE_PLAY;
 		playerLives = 3;
 		setInterval(gameLoop, intervalTime);
 	}
 	
 	document.onkeydown = function(e) {
 		e = e ? e : window.event;
+		//console.log(e.keyCode + " down");
+		
+		// add a timer here, using date...
+		// time how long key is held down for canon ball velocity.
+		
 		keyPressList[e.keyCode] = true;
 	}
 	
 	document.onkeyup = function(e) {
 		e = e ? e : window.event;
+		//console.log(e.keyCode + " up");
 		keyPressList[e.keyCode] = false;
 	} 
 	
