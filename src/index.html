@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Tank Defence</title>
+
+    <link rel="stylesheet" href="styles/animate.min.css" type="text/css" />
+    <link rel="stylesheet" href="styles/tank.css" type="text/css" />
+
+    <script type="text/javascript"></script>
+    <script src="../lib/modernizr-custom.js"></script>
+    <script src="../lib/jquery-1.11.0.min.js"></script>
+    <script src="../src/Level.js"></script>
+    <script src="../src/Egg.js"></script>
+    <script src="../src/Ufo.js"></script>
+    <script src="../src/Tank.js"></script>
+    <script src="../src/Game.js"></script>
+    <script src="../lib/animatedModal.min.js"></script>
+    <script src="../src/tank_modal.js"></script>
+  </head>
+  <body>
+
+    <section id="content">
+      
+      <div class="inner">
+        <h1>Tank Defence</h1>
+        <p>The purpose of the game is to destroy the aliens invading the city. The player
+        controls a tank. The player can move backwards and forwards and move the tank
+        turret up and down. The player can control the power that the canon shoots from
+        the tank.</p>
+        <p>Tank Defence is an HTML5 Canvas game. I made most of the graphics using Photoshop, Inkscape, and Gimp. The game is written using Javascript. Tank Defence requires a keyboard. The controls are listed below. Click the tank image below to play the game.</p>
+        
+        <p><a href="#animatedModal" class="play-button" id="play"><img src="img/play_button.png" class="center"></a></p>
+        
+        <h2>Controls</h2>
+        <table class="u-full-width">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Key</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Left</td>
+              <td>Left Arrow</td>
+            </tr>
+            <tr>
+              <td>Right</td>
+              <td>Right Arrow</td>
+            </tr>
+            <tr>
+              <td>Increase Turret Angle</td>
+              <td>Up Arrow</td>
+            </tr>
+            <tr>
+              <td>Decrease Turret Angle</td>
+              <td>Down Arrow</td>
+            </tr>
+            <tr>
+              <td>Decrease Canon Power</td>
+              <td>&lt;</td>
+            </tr>
+            <tr>
+              <td>Increase Canon Power</td>
+              <td>&gt;</td>
+            </tr>
+            <tr>
+              <td>Fire Canon</td>
+              <td>Space</td>
+            </tr>
+          </tbody>
+        </table>
+     
+        <div id="animatedModal">
+            <div class="close-animatedModal">
+                <div class="close-button-container">
+                  <span class="close-button"></span>
+                </div>
+            </div>
+                
+            <div class="modal-content">
+              <div id="tank" class="u-full-width">
+                <canvas id="canvas" width="640" height="480">
+                  Your browser does not support the HTML 5 Canvas. 
+                </canvas>
+              </div>
+            </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
