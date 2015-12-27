@@ -1,3 +1,5 @@
+var _ = require('underscore');
+
 var cache = {};
 
 var Level = {
@@ -17,13 +19,13 @@ var Level = {
                     var img = new Image();
                     img.onload = function() {
                         cache[url] = img;
-                        resolve();
+                        resolve(url);
                     };
                     img.onerror = function() {
                         reject();
                     };
                     img.src = url;
-                }):
+                });
                 promises.push(fetch);
             }
         });
@@ -31,12 +33,12 @@ var Level = {
             scope.image = cache[scope.tileSheet];
         }
         else {
-            var fetch = Promise(function(resolve,reject) {
+            var fetch = new Promise(function(resolve,reject) {
                 var img = new Image();
                 img.onload = function() {
                     scope.image = img;
                     cache[scope.tileSheet] = img;
-                    resolve();
+                    resolve(scope.tileSheet);
                 };
                 img.onerror = function() {
                     reject();
@@ -45,7 +47,7 @@ var Level = {
             });
             promises.push(fetch);
         }
-        return promises;
+        return Promise.all(promises);
     },
     draw: function() {
         var mapRows = 15;
@@ -88,15 +90,15 @@ LevelAlpha.setup = function(context, gameData) {
         var mapped = [
             gameData.spriteSheet,
             gameData.player.spriteSheet,
-            
         ];
+        
         mapped.push(_.map(gameData.ufos, function(ufo) {
             return ufo.spriteSheet;
         }));
         mapped.push(_.map(gameData.aliens, function(alien) {
             return alien.spriteSheet;
         }));
-        return _.compact(mapped);
+        return _.chain(mapped).compact().flatten().value();
     }
 
     this.init(
@@ -105,57 +107,9 @@ LevelAlpha.setup = function(context, gameData) {
     );
 };
 
-/************/
-/* Level 1 **/
-/************/
-var levelOneTileMap = [
-    [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,2,2,2,2,2,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,4,4,4,4,4,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,4,4,4,4,4,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,4,4,4,4,4,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,4,4,4,4,4,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,4,4,4,4,4,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,4,4,5,4,4,7,7,7,7],
-    [7,7,7,7,7,7,7,7,7,7,7,4,4,3,4,4,7,7,7,7],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6]
-];
-
-var levelOneGameData = {
-    buildings: [
-        {
-            edge: 352,
-            bounds: { x: 352, y: 160, width: 160 },
-        }
-    ],
-    spriteSheet: "assets/building_32x32.png",
-    player: {
-        spriteSheet: "assets/tank_sheet_sm.png",
-        posX: 0,
-        posY: 0
-    },
-    ufos: [
-        {
-            spriteSheet: "assets/ufo_sheet.png",
-            posX: 0,
-            posY; 0
-        }
-    ],
-    aliens: [
-        {
-            spriteSheet: "assets/ufo_sheet.png",
-            strength: 1,
-            toxicity: 1,
-            offensiveness: 0
-        }
-    ],
-    tileMap: levelOneTileMap
+module.exports = {
+    alpha: LevelAlpha
 };
 
-var Level1 = Object.new(LevelAlpha);
-Level1.setup(null, levelOneGameData);
+//var Level1 = Object.create(LevelAlpha);
+//Level1.setup(null, levelOneGameData);
