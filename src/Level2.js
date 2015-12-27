@@ -110,6 +110,3 @@ LevelAlpha.setup = function(context, gameData) {
 module.exports = {
     alpha: LevelAlpha
 };
-
-//var Level1 = Object.create(LevelAlpha);
-//Level1.setup(null, levelOneGameData);

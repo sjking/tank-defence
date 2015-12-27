@@ -59,7 +59,7 @@ var levelOneGameData = {
 var alpha = Object.create(level.alpha);
 
 test('setup level one', function(t) {
-    t.plan(1);
+    t.plan(6);
     
     alpha.setup(null, levelOneGameData);
 
@@ -72,15 +72,11 @@ test('setup level one', function(t) {
     var difference = _.difference(assets, alpha.assets);
 
     t.deepLooseEqual(difference, [], "assets are setup");
+
+    t.equal(alpha.tileSheet, levelOneGameData.tileSheet, "tilesheet is setup");
+    t.equal(alpha.buildings, levelOneGameData.buildings, "buildings are setup");
+    t.equal(alpha.player, levelOneGameData.player, "player is setup");
+    t.equal(alpha.ufos, levelOneGameData.ufos, "ufos are setup");
+    t.equal(alpha.aliens, levelOneGameData.aliens, "aliens are setup");
 });
 
-
-
-
-//tLevelAlpha.load().then(function(assets) {
-//    console.log("success: ", assets);
-//    console.log("contents: ", JSON.stringify(tLevelAlpha, null, 5));		
-//}, function (error) {
-//    //expect().fail("Failed to load Level");
-//    console.log("Failure: ", error);
-//});
