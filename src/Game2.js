@@ -1,3 +1,5 @@
+var _ = require('underscore');
+
 var Level = require('./Level2.js');
 var LevelOne = require('./LevelOne.js');
 
@@ -23,9 +25,7 @@ function loadLevel(levelData) {
     this.gameState = GAME_STATE.WAIT;
 }
 
-function handleError(err) {
-    console.log("err: ", err);
-}
+function handleError(err) {}
 
 function initGameObjects(assets) {
     return this.level.populate(assets); 
@@ -38,6 +38,9 @@ function startLevel() {
 function playGame() {
     this.level.draw();
     this.level.player.draw();
+    _.each(this.level.aliens, function(alien) {
+        alien.draw();
+    });
 }
 
 var Game = {
@@ -77,5 +80,3 @@ var Game = {
 };
 
 module.exports = Game;
-
-

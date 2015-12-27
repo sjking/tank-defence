@@ -41,7 +41,7 @@ var levelOneGameData = {
     ],
     aliens: [
         {
-            spriteSheet: "assets/ufo_sheet.png",
+            spriteSheet: "assets/alien_sheet.png",
             strength: 1,
             toxicity: 1,
             offensiveness: 0

@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var Player = require('./Player.js');
+var Alien = require('./Alien.js');
 
 var cache = {};
 
@@ -120,7 +121,24 @@ LevelAlpha.populate = function(assets) {
         playerLives
     );
     this.player = player;
-    
+
+    var context = this.context;
+
+    function alienPosition(building) {
+        var x = building.bounds.x + building.bounds.width / 2;
+        return { posX: x, posY: building.bounds.y }; 
+    }
+
+    var aliens = _.chain(this.buildings).map(alienPosition).zip(this.aliens).value();
+    var newAliens = [];
+    _.each(aliens, function(alien) {
+        var newAlien = Object.create(Alien);
+        newAlien.init(context, alien[0].posX, alien[0].posY, 
+                images[alien[1].spriteSheet].img
+        );
+        newAliens.push(newAlien);
+    });
+    this.aliens = newAliens;
 
     return Promise.resolve();
 };
