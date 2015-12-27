@@ -7,9 +7,16 @@
 		"underscore": "*",
 		"expect.js": "~0.3.1"
 	},
+  "devDependencies": {
+		"tape": "^2.13.1",
+    "tap-spec": "*"
+  },
+  "scripts": {
+    "test": "tape test/*.js | tap-spec"
+  },
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/sjking/tank-defence"
+		"url": "git://github.com/sjking/tank-defence.git"
 	},
-  "license": "GNU Affero General Public License V3"
+  "license": "AGPL-3.0"
 }
