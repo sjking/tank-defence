@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var Player = require('./Player.js');
 
 var cache = {};
 
@@ -19,7 +20,7 @@ var Level = {
                     var img = new Image();
                     img.onload = function() {
                         cache[url] = img;
-                        resolve(url);
+                        resolve({ url: url, img: img });
                     };
                     img.onerror = function() {
                         reject();
@@ -35,15 +36,15 @@ var Level = {
         else {
             var fetch = new Promise(function(resolve,reject) {
                 var img = new Image();
+                img.src = scope.tileSheet;
                 img.onload = function() {
                     scope.image = img;
                     cache[scope.tileSheet] = img;
-                    resolve(scope.tileSheet);
+                    resolve({ url: scope.tileSheet, img: img });
                 };
                 img.onerror = function() {
                     reject();
                 };
-                img.src = scope.tileSheet;
             });
             promises.push(fetch);
         }
@@ -60,7 +61,7 @@ var Level = {
                 var sourceX = tileId*tileSize;
                 var sourceY = 0;
                 this.context.drawImage(
-                    this.tileSheet, sourceX, sourceY, tileSize, 
+                    this.image, sourceX, sourceY, tileSize, 
                     tileSize, j*tileSize, i*tileSize, tileSize, tileSize
                 );
             }
@@ -102,9 +103,26 @@ LevelAlpha.setup = function(context, gameData) {
     }
 
     this.init(
-        context, gameData.tileMap, gameData.tileSheet, 
+        context, gameData.tileMap, gameData.spriteSheet, 
         gameData.buildings, mapAssets(gameData)
     );
+};
+
+LevelAlpha.populate = function(assets) {
+    // to-do: assign each image to its object (player, ufo, alien), the
+    // building image is already assigned to this level by now
+    var images = _.indexBy(assets, 'url');
+    
+    var player = Object.create(Player);
+    var playerImage = images[this.player.spriteSheet].img;
+    var playerLives = 3;
+    player.init(this.context, playerImage, this.player.posX, this.player.posY,
+        playerLives
+    );
+    this.player = player;
+    
+
+    return Promise.resolve();
 };
 
 module.exports = {
