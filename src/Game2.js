@@ -41,6 +41,9 @@ function playGame() {
     _.each(this.level.aliens, function(alien) {
         alien.draw();
     });
+    _.each(this.level.ufos, function(ufo) {
+        ufo.draw();
+    });
 }
 
 var Game = {

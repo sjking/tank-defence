@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var Player = require('./Player.js');
 var Alien = require('./Alien.js');
+var Ufo = require('./Ufo2.js');
 
 var cache = {};
 
@@ -124,12 +125,16 @@ LevelAlpha.populate = function(assets) {
 
     var context = this.context;
 
+    // Aliens are centred atop buildings
     function alienPosition(building) {
         var x = building.bounds.x + building.bounds.width / 2;
         return { posX: x, posY: building.bounds.y }; 
     }
 
-    var aliens = _.chain(this.buildings).map(alienPosition).zip(this.aliens).value();
+    // TO-DO: adjust the data model for aliens/buildings, parallel collections 
+    // are a code smell
+    var aliens = _.chain(this.buildings).map(alienPosition).zip(this.aliens)
+        .value();
     var newAliens = [];
     _.each(aliens, function(alien) {
         var newAlien = Object.create(Alien);
@@ -139,6 +144,18 @@ LevelAlpha.populate = function(assets) {
         newAliens.push(newAlien);
     });
     this.aliens = newAliens;
+
+    function makeUfo(ufo) {
+        var newUfo = Object.create(Ufo);
+        var ufoImage = images[ufo.spriteSheet].img;
+        newUfo.init(context, ufo.posX, ufo.posY, ufo.dx, ufo.dy, 
+                ufo.laserFrequency, ufoImage
+        );
+        return newUfo;
+    }
+    
+    var ufos = _.map(this.ufos, makeUfo); 
+    this.ufos = ufos;
 
     return Promise.resolve();
 };

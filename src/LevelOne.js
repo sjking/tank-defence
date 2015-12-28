@@ -23,7 +23,7 @@ var levelOneGameData = {
     buildings: [
         {
             edge: 352,
-            bounds: { x: 352, y: 160, width: 160 },
+            bounds: { x: 352, y: 160, width: 160 }
         }
     ],
     spriteSheet: "assets/building_32x32.png",
@@ -35,8 +35,12 @@ var levelOneGameData = {
     ufos: [
         {
             spriteSheet: "assets/ufo_sheet.png",
-            posX: 0,
-            posY: 0
+            posX: -50,
+            posY: 65,
+            dx: 4,
+            dy: 0,
+            laserFrequency: 100,
+            laserSpeed: 5
         }
     ],
     aliens: [
