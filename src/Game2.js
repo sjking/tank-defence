@@ -2,6 +2,8 @@ var _ = require('underscore');
 
 var Level = require('./Level2.js');
 var LevelOne = require('./LevelOne.js');
+var keyDecoder = require('./keyMap.js'),
+    keyCode = keyDecoder.codes;
 
 const GAME_STATE = {
     PLAY: 0,
@@ -36,6 +38,7 @@ function startLevel() {
 }
 
 function playGame() {
+    detectKeyPresses.call(this);
     this.level.draw();
     this.level.player.draw();
     _.each(this.level.aliens, function(alien) {
@@ -46,11 +49,51 @@ function playGame() {
     });
 }
 
+function detectKeyPresses() {
+    var keyPressList = this.keyPressList;
+    var keysList = _.pairs(keyPressList);
+
+    _.each(keysList, function(key) {
+        //var msg = key[1] ? " pressed" : " released";
+        switch(Number(key[0])) {
+            case keyCode.UP:
+                //console.log("up ", msg);
+                break;
+            case keyCode.RIGHT:
+                //console.log("right ", msg);
+                break;
+            case keyCode.DOWN:
+                //console.log("down ", msg);
+                break;
+            case keyCode.LEFT:
+                //console.log("left ", msg);
+                break;
+            case keyCode.ACTION:
+                //console.log("action ", msg);
+                break;
+            case keyCode.INCREASE_POWER:
+                //console.log("more power ", msg);
+                break;
+            case keyCode.DECREASE_POWER:
+                //console.log("less power ", msg);
+                break;
+            case keyCode.START:
+                //console.log("start ", msg);
+                break;
+        }
+        delete keyPressList[key[0]];
+    });
+}
+
+function detectCollisions() {
+}
+
 var Game = {
-    init: function(context) {
+    init: function(context, keyPressList) {
         this.context = context;
         this.gameState = GAME_STATE.LOAD;
         this.level = 0;
+        this.keyPressList = keyPressList;
     },
     loop: function() {
         switch (this.gameState) {
