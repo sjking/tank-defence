@@ -22,15 +22,33 @@ function loadLevel(levelData) {
     this.level.setup(this.context, levelData.data);
     this.level.load()
         .then(initGameObjects.bind(this))
+        .then(setLevelBoundaries.bind(this))
         .then(startLevel.bind(this))
         .catch(handleError.bind(this));
     this.gameState = GAME_STATE.WAIT;
 }
 
-function handleError(err) {}
+function handleError(err) {
+    var msg = err.toString() + "\nfilename: " + err.fileName +
+        "\nline number: " + err.lineNumber + "\ncolumn: " + err.columnNumber;
+    alert(msg);
+}
 
 function initGameObjects(assets) {
     return this.level.populate(assets); 
+}
+
+function setLevelBoundaries() {
+    var buildings = this.level.buildings;
+    var edge = this.context.canvas.width;
+    for (var i=0; i < buildings.length; i++) {
+       if (buildings[i].edge < edge) {
+           edge = buildings[i].edge;
+       }
+    }
+    this.level.buildingBoundary = edge;     
+
+    return Promise.resolve();
 }
 
 function startLevel() {
@@ -40,49 +58,56 @@ function startLevel() {
 function playGame() {
     detectKeyPresses.call(this);
     this.level.draw();
-    this.level.player.draw();
     _.each(this.level.aliens, function(alien) {
         alien.draw();
     });
+    //for (var i=0; i < this.level.aliens.length; i++) {
+        // TO-DO
+    //}
+
     _.each(this.level.ufos, function(ufo) {
         ufo.draw();
     });
+    this.level.player.draw();
 }
 
 function detectKeyPresses() {
-    var keyPressList = this.keyPressList;
-    var keysList = _.pairs(keyPressList);
-
-    _.each(keysList, function(key) {
-        //var msg = key[1] ? " pressed" : " released";
-        switch(Number(key[0])) {
-            case keyCode.UP:
-                //console.log("up ", msg);
-                break;
-            case keyCode.RIGHT:
-                //console.log("right ", msg);
-                break;
-            case keyCode.DOWN:
-                //console.log("down ", msg);
-                break;
-            case keyCode.LEFT:
-                //console.log("left ", msg);
-                break;
-            case keyCode.ACTION:
-                //console.log("action ", msg);
-                break;
-            case keyCode.INCREASE_POWER:
-                //console.log("more power ", msg);
-                break;
-            case keyCode.DECREASE_POWER:
-                //console.log("less power ", msg);
-                break;
-            case keyCode.START:
-                //console.log("start ", msg);
-                break;
+    var keys = this.keyPressList;
+    var player = this.level.player;
+        
+    if (keys[keyCode.LEFT]) {
+        if (player && player.posX > 0) {
+            player.posX -= player.speed;
         }
-        delete keyPressList[key[0]];
-    });
+    }
+    if (keys[keyCode.RIGHT]) {
+        var buildingBoundary = this.level.buildingBoundary
+        if (player && player.posX < buildingBoundary - player.width) {
+            player.posX += player.speed;
+        }
+    }
+    if (keys[keyCode.UP]) {
+        if (player && player.turretPos < player.turretCount) {
+		    player.turretPos++;
+        }
+    }
+    if (keys[keyCode.DOWN]) {
+        if (player && player.turretPos > 0) {
+		    player.turretPos--
+        }
+    }
+    if (keys[keyCode.ACTION]) {
+
+    }
+    if (keys[keyCode.INCREASE_POWER]) {
+
+    }
+    if (keys[keyCode.DECREASE_POWER]) {
+
+    }
+    if (keys[keyCode.START]) {
+
+    }
 }
 
 function detectCollisions() {
@@ -120,7 +145,7 @@ var Game = {
                 break;
             default:
                 break;
-		}
+        }
     },
     interval: INTERVAL
 };
