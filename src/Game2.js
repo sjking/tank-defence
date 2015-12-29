@@ -84,12 +84,12 @@ function detectKeyPresses() {
     }
     if (keys[keyCode.UP]) {
         if (player && player.turretPos < player.turretCount) {
-		    player.turretPos++;
+            player.turretPos++;
         }
     }
     if (keys[keyCode.DOWN]) {
         if (player && player.turretPos > 0) {
-		    player.turretPos--
+            player.turretPos--
         }
     }
     if (keys[keyCode.ACTION]) {
