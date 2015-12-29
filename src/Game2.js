@@ -58,16 +58,12 @@ function startLevel() {
 function playGame() {
     detectKeyPresses.call(this);
     this.level.draw();
-    _.each(this.level.aliens, function(alien) {
-        alien.draw();
-    });
-    //for (var i=0; i < this.level.aliens.length; i++) {
-        // TO-DO
-    //}
-
-    _.each(this.level.ufos, function(ufo) {
-        ufo.draw();
-    });
+    for (var i=0; i < this.level.aliens.length; i++) {
+        this.level.aliens[i].draw();
+    }
+    for (var i=0; i < this.level.ufos.length; i++) {
+        this.level.ufos[i].draw();
+    }
     this.level.player.draw();
 }
 
