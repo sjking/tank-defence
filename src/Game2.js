@@ -36,6 +36,7 @@ function handleError(err) {
 
 function initGameObjects(assets) {
     this.canonBalls = [];
+    this.lasers = [];
     return this.level.populate(assets); 
 }
 
@@ -67,18 +68,34 @@ function playGame() {
     }
 
     this.level.draw();
+    
     for (var i=0; i < this.level.aliens.length; i++) {
         this.level.aliens[i].draw();
     }
+    
     for (var i=0; i < this.level.ufos.length; i++) {
-        this.level.ufos[i].animate(this.level.buildingBoundary, this.player);
+        var laser = this.level.ufos[i].animate(this.level.buildingBoundary, 
+                                               this.level.player);
+        laser && this.lasers.push(laser);
         this.level.ufos[i].draw();
     }
-    this.level.player.draw();
+  
+    var i = this.lasers.length;
+    while(i--) {
+        if (!this.lasers[i].animate()) {
+            this.lasers.splice(i, 1);            
+        }
+        else {
+            this.lasers[i].draw();
+        }
+    }
+
     for (var i=0; i < this.canonBalls.length; i++) {
         this.canonBalls[i].draw();
     }
-
+    
+    this.level.player.draw();
+    
     detectCollisions.call(this);
 }
 

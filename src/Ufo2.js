@@ -1,3 +1,5 @@
+var Laser = require('./Laser');
+
 var Ufo = {
     init: function(context, posX, posY, dx, dy, laserFrequency, image) {
         this.context = context; 
@@ -16,6 +18,7 @@ var Ufo = {
         this.up = true;
         this.laserFrequency = laserFrequency;
         this.laserCounter = 0;
+        this.laserSpeed = 5.0; // TO-DO: pass this in 
     },
     draw: function() {
         var sourceX = Math.floor(this.frameIndex % 4) * this.width;
@@ -26,6 +29,7 @@ var Ufo = {
         );
     },
     animate: function(buildingBoundary, player) {
+        // Return a laser if the laser is fired, else return null
         this.animationCounter++;
         this.laserCounter++;
         
@@ -50,13 +54,19 @@ var Ufo = {
 
         if (this.laserCounter > this.laserFrequency && 
                 this.posX < buildingBoundary && player) {
-            var targetX = player.posx + player.width / 2.0;
+            var targetX = player.posX + player.width / 2.0;
             var targetY = player.ground - player.height / 2.0;
             var sourceX = this.posX;
             var sourceY = this.posY;
             this.laserCounter = 0;
             // TO-DO: make a laser object and return it
+            var newLaser = Object.create(Laser);
+            newLaser.init(this.context, targetX, targetY, sourceX, sourceY, 
+                          this.laserSpeed
+            );
+            return newLaser;
         }
+        return null;
     }
 }
 
