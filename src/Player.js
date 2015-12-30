@@ -7,6 +7,7 @@ var Player = {
         this.lives = lives;
         this.posX = posX;
         this.posY = posY;
+        this.alive = true;
         this.width = 118;
         this.height = 80;
         this.canonX = 62;

@@ -51,7 +51,17 @@ var levelOneGameData = {
             offensiveness: 0
         }
     ],
-    tileMap: levelOneTileMap
+    tileMap: levelOneTileMap,
+    explosions: [
+        {
+            spriteSheet: "assets/explosion.png",
+            width: 130,
+            height: 130,
+            frames: 42,
+            columns: 6,
+            rows: 7
+        }
+    ]
 };
 
 module.exports = {

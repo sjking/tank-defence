@@ -2,6 +2,7 @@ var _ = require('underscore');
 var Player = require('./Player.js');
 var Alien = require('./Alien.js');
 var Ufo = require('./Ufo2.js');
+var Explosion = require('./Explosion');
 
 var cache = {};
 
@@ -88,6 +89,7 @@ LevelAlpha.setup = function(context, gameData) {
     this.player = gameData.player;
     this.ufos = gameData.ufos;
     this.aliens = gameData.aliens;
+    this.explosions = gameData.explosions;
 
     function mapAssets(gameData) {
         var mapped = [
@@ -101,6 +103,10 @@ LevelAlpha.setup = function(context, gameData) {
         mapped.push(_.map(gameData.aliens, function(alien) {
             return alien.spriteSheet;
         }));
+        mapped.push(_.map(gameData.explosions, function(explosion) {
+            return explosion.spriteSheet;
+        }));
+
         return _.chain(mapped).compact().flatten().value();
     }
 
@@ -156,6 +162,19 @@ LevelAlpha.populate = function(assets) {
     
     var ufos = _.map(this.ufos, makeUfo); 
     this.ufos = ufos;
+
+    // explosions: will be created from these base objects as needed; multiple
+    // explosion base objects can be provided for variety
+    var explosions = [];
+    for (var i=0; i < this.explosions.length; i++) {
+        var explosionSheet = images[this.explosions[i].spriteSheet].img;
+        var explosion = Object.create(Explosion(explosionSheet, 
+                    this.explosions[i].width, this.explosions[i].height,
+                    this.explosions[i].frames, this.explosions[i].columns,
+                    this.explosions[i].rows));
+        explosions.push(explosion);
+    }
+    this.explosions = explosions;
 
     return Promise.resolve();
 };

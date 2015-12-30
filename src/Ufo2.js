@@ -53,7 +53,7 @@ var Ufo = {
         }
 
         if (this.laserCounter > this.laserFrequency && 
-                this.posX < buildingBoundary && player) {
+                this.posX < buildingBoundary && player.alive) {
             var targetX = player.posX + player.width / 2.0;
             var targetY = player.ground - player.height / 2.0;
             var sourceX = this.posX;

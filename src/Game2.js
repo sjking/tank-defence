@@ -37,6 +37,7 @@ function handleError(err) {
 function initGameObjects(assets) {
     this.canonBalls = [];
     this.lasers = [];
+    this.explosions = [];
     return this.level.populate(assets); 
 }
 
@@ -58,8 +59,6 @@ function startLevel() {
 }
 
 function playGame() {
-    detectKeyPresses.call(this);
-    
     var i = this.canonBalls.length;
     while (i--) {
         if (!this.canonBalls[i].animate()) {
@@ -79,24 +78,51 @@ function playGame() {
         laser && this.lasers.push(laser);
         this.level.ufos[i].draw();
     }
+    
   
     var i = this.lasers.length;
     while(i--) {
-        if (!this.lasers[i].animate()) {
+        this.lasers[i].draw();
+    
+        if (this.lasers[i].checkCollision(this.level.player)) {
+            playerDies.call(this);
+            generateExplosion.call(this, this.lasers[i].posX, 
+                    this.lasers[i].posY);
             this.lasers.splice(i, 1);            
         }
-        else {
-            this.lasers[i].draw();
+        else if (!this.lasers[i].animate()) {
+            this.lasers.splice(i, 1);            
         }
     }
 
     for (var i=0; i < this.canonBalls.length; i++) {
         this.canonBalls[i].draw();
     }
+
+    var i = this.explosions.length;
+    while (i--) {
+        this.explosions[i].draw(this.context);
+        if (!this.explosions[i].animate()) {
+            this.explosions.splice(i, 1);
+        }
+    }
     
-    this.level.player.draw();
+    this.level.player.alive && this.level.player.draw();
     
-    detectCollisions.call(this);
+    //detectCollisions.call(this);
+}
+
+function generateExplosion(posX, posY) {
+    if (this.level.explosions.length === 1) {
+        var explosion = Object.create(this.level.explosions[0]);
+        explosion.init(this.context, posX, posY);
+        this.explosions.push(explosion);
+    }
+    else {
+        // TO-DO: handle variety of explosions, maybe choose by random, or by
+        // a keyword?
+        return;
+    }
 }
 
 function detectKeyPresses() {
@@ -141,8 +167,28 @@ function detectKeyPresses() {
     }
 }
 
-function detectCollisions() {
+function playerDies() {
+    this.level.player.lives--;
+    this.level.player.alive = false;
+    this.gameState = GAME_STATE.DIE;
 }
+
+function waitForExplosions() {
+    if (this.explosions.length) {
+        playGame.call(this);
+    }
+    else if (this.level.player.lives) {
+        // TO-DO: KEEP PLAYING LEVEL
+    }
+    else {
+        // TO-DO: GAME OVER
+    }
+}
+
+//function detectCollisions() {
+    // laser hitting tank
+
+//}
 
 var Game = {
     init: function(context, keyPressList) {
@@ -154,10 +200,12 @@ var Game = {
     loop: function() {
         switch (this.gameState) {
             case GAME_STATE.PLAY:
+                detectKeyPresses.call(this);
                 playGame.call(this);
                 break;
             case GAME_STATE.DIE:
                 //transition()
+                waitForExplosions.call(this);
                 break;
             case GAME_STATE.GAME_OVER:
                 //gameOver();
@@ -169,7 +217,7 @@ var Game = {
                 //titleScreen();
                 break;
             case GAME_STATE.LOAD:
-                loadLevel.call(this, LevelOne);
+                loadLevel.call(this, LevelOne); // TO-DO: Load other levels
                 break;
             case GAME_STATE.WAIT:
                 (function() {})()

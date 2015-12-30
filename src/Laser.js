@@ -26,6 +26,18 @@ var Laser = {
         );
         this.context.closePath();
         this.context.fill();
+    },
+    checkCollision: function(player) {
+        // returns true if collision, false if not
+        if (this.posX > player.posX &&
+                this.posX < player.posX + player.hitWidth &&
+                this.posY > player.ground - player.hitHeight &&
+                this.posY < player.ground) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
 
