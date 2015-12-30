@@ -35,6 +35,7 @@ function handleError(err) {
 }
 
 function initGameObjects(assets) {
+    this.canonBalls = [];
     return this.level.populate(assets); 
 }
 
@@ -57,14 +58,28 @@ function startLevel() {
 
 function playGame() {
     detectKeyPresses.call(this);
+    
+    var i = this.canonBalls.length;
+    while (i--) {
+        if (!this.canonBalls[i].animate()) {
+            this.canonBalls.splice(i, 1);
+        }
+    }
+
     this.level.draw();
     for (var i=0; i < this.level.aliens.length; i++) {
         this.level.aliens[i].draw();
     }
     for (var i=0; i < this.level.ufos.length; i++) {
+        this.level.ufos[i].animate(this.level.buildingBoundary, this.player);
         this.level.ufos[i].draw();
     }
     this.level.player.draw();
+    for (var i=0; i < this.canonBalls.length; i++) {
+        this.canonBalls[i].draw();
+    }
+
+    detectCollisions.call(this);
 }
 
 function detectKeyPresses() {
@@ -89,11 +104,14 @@ function detectKeyPresses() {
     }
     if (keys[keyCode.DOWN]) {
         if (player && player.turretPos > 0) {
-            player.turretPos--
+            player.turretPos--;
         }
     }
     if (keys[keyCode.ACTION]) {
-
+        var canonBall = player.fireCanon();
+        if (canonBall) {
+            this.canonBalls.push(canonBall);
+        }
     }
     if (keys[keyCode.INCREASE_POWER]) {
 
