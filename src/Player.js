@@ -22,7 +22,7 @@ var Player = {
         this.canonTimer = 0;
         this.canonHold = 60;
         this.canonBallSpeed = 5;
-        this.ground = 416;
+        this.ground = 416; // TO-DO: this shouldn't be hard-coded
     },
     draw: function() {
         var sourceX = Math.floor(this.turretPos % 3) * this.width;

@@ -4,6 +4,7 @@ var Level = require('./Level2.js');
 var LevelOne = require('./LevelOne.js');
 var keyDecoder = require('./keyMap.js'),
     keyCode = keyDecoder.codes;
+var StatusBar = require('./StatusBar');
 
 const GAME_STATE = {
     PLAY: 0,
@@ -23,6 +24,7 @@ function loadLevel(levelData) {
     this.level.load()
         .then(initGameObjects.bind(this))
         .then(setLevelBoundaries.bind(this))
+        .then(setStatusBar.bind(this))
         .then(startLevel.bind(this))
         .catch(handleError.bind(this));
     this.gameState = GAME_STATE.WAIT;
@@ -39,6 +41,11 @@ function initGameObjects(assets) {
     this.lasers = [];
     this.explosions = [];
     return this.level.populate(assets); 
+}
+
+function setStatusBar() {
+    this.statusBar = Object.create(StatusBar);
+    this.statusBar.init(this.context, this.level.player);
 }
 
 function setLevelBoundaries() {
@@ -67,6 +74,7 @@ function playGame() {
     }
 
     this.level.draw();
+    this.statusBar.draw();
     
     for (var i=0; i < this.level.aliens.length; i++) {
         this.level.aliens[i].draw();
