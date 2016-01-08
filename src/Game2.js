@@ -166,10 +166,10 @@ function detectKeyPresses() {
         }
     }
     if (keys[keyCode.INCREASE_POWER]) {
-
+        this.level.player.increaseCanonBallSpeed();
     }
     if (keys[keyCode.DECREASE_POWER]) {
-
+        this.level.player.decreaseCanonBallSpeed();
     }
     if (keys[keyCode.START]) {
 

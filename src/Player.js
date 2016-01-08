@@ -24,6 +24,12 @@ var Player = {
         this.canonBallSpeed = 5;
         this.ground = 416; // TO-DO: this shouldn't be hard-coded
     },
+    increaseCanonBallSpeed: function() {
+        this.canonBallSpeed += this.canonBallSpeed < 15 ? 0.2 : 0;
+    },
+    decreaseCanonBallSpeed: function() {
+        this.canonBallSpeed -= this.canonBallSpeed > 1 ? 0.2 : 0;
+    },
     draw: function() {
         var sourceX = Math.floor(this.turretPos % 3) * this.width;
         var sourceY = Math.floor(this.turretPos / 3) * this.height;
