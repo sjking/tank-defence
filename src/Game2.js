@@ -92,11 +92,12 @@ function playGame() {
     while(i--) {
         this.lasers[i].draw();
     
-        if (this.lasers[i].checkCollision(this.level.player)) {
-            playerDies.call(this);
+        if (this.lasers[i].checkCollision(this.level.player) && 
+                this.level.player.alive) {
             generateExplosion.call(this, this.lasers[i].posX, 
                     this.lasers[i].posY);
             this.lasers.splice(i, 1);            
+            playerDies.call(this);
         }
         else if (!this.lasers[i].animate()) {
             this.lasers.splice(i, 1);            
