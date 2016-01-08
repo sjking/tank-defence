@@ -183,11 +183,10 @@ function playerDies() {
 }
 
 function waitForExplosions() {
-    if (this.explosions.length) {
+    if (this.explosions.length || this.lasers.length) {
         playGame.call(this);
     }
     else if (this.level.player.lives) {
-        // TO-DO: KEEP PLAYING LEVEL
         this.level.player.alive = true;
         this.gameState = GAME_STATE.PLAY;
     }
