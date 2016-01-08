@@ -187,6 +187,8 @@ function waitForExplosions() {
     }
     else if (this.level.player.lives) {
         // TO-DO: KEEP PLAYING LEVEL
+        this.level.player.alive = true;
+        this.gameState = GAME_STATE.PLAY;
     }
     else {
         // TO-DO: GAME OVER
