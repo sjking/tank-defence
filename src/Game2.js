@@ -70,18 +70,19 @@ function playGame() {
 
     this.level.draw();
     this.statusBar.draw();
-    
+   
+    // draw enemies
     for (var i=0; i < this.level.aliens.length; i++) {
         this.level.aliens[i].draw();
     }
-    
     for (var i=0; i < this.level.ufos.length; i++) {
         var laser = this.level.ufos[i].animate(this.level.buildingBoundary, 
                                                this.level.player);
         laser && this.lasers.push(laser);
         this.level.ufos[i].draw();
     }
-    
+   
+    // Check if canon ball hits any enemies
     i = this.canonBalls.length;
     while (i--) {
         var canonBall = this.canonBalls[i];
@@ -92,17 +93,30 @@ function playGame() {
         }
         else {
             var j = this.level.ufos.length;
-            while (j--) {
+            var pass = false;
+            while (j-- && !pass) {
                 var ufo = this.level.ufos[j];
                 if (ufo.checkCollision(canonBall)) {
                    generateExplosion.call(this, canonBall.posX, canonBall.posY);
                    this.canonBalls.splice(i, 1);
                    this.level.ufos.splice(j, 1);
+                   pass = true;
+                }
+            }
+            var k = this.level.aliens.length;
+            while (k-- && !pass) {
+                var alien = this.level.aliens[k];
+                if (alien.checkCollision(canonBall)) {
+                   generateExplosion.call(this, canonBall.posX, canonBall.posY);
+                   this.canonBalls.splice(i, 1);
+                   this.level.aliens.splice(k, 1);
+                   pass = true;
                 }
             }
         }
     }
 
+    // check if the player is hit by any enemies lasers
     i = this.lasers.length;
     while(i--) {
         this.lasers[i].draw();
@@ -119,6 +133,7 @@ function playGame() {
         }
     }
 
+    // draw explosions
     i = this.explosions.length;
     while (i--) {
         this.explosions[i].draw(this.context);

@@ -29,6 +29,15 @@ var Alien = {
             this.forwards ? this.frameIndex++ : this.frameIndex--; 
             this.animationCounter = 0;
         }
+    },
+    checkCollision: function(projectile) {
+        if (projectile.posX > this.posX && 
+                projectile.posX < this.posX + this.width &&
+                projectile.posY > this.posY - this.height &&
+                projectile.posY < this.posY) {
+            return true;
+        }
+        return false;
     }
 };
 
