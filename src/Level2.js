@@ -73,12 +73,12 @@ var Level = {
     checkCollision: function(projectile) {
         var p = projectile;
 
-        this.buildings.forEach(function(building) {
-            var b = building.bounds;
-            if (p.x > b[i].x && p.x < b[i].width + b[i].x && p.y > b[i].y) {
+        for (var i=0; i < this.buildings.length; i++) {
+            var b = this.buildings[i].bounds; 
+            if (p.posX > b.x && p.posX < b.width + b.x && p.posY > b.y) {
                 return true;
             }
-        });
+        }
     }
 };
 

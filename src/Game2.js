@@ -82,7 +82,7 @@ function playGame() {
         this.level.ufos[i].draw();
     }
    
-    // Check if canon ball hits any enemies
+    // Check if canon ball hits any enemies, or any buildings
     i = this.canonBalls.length;
     while (i--) {
         var canonBall = this.canonBalls[i];
@@ -110,6 +110,13 @@ function playGame() {
                    generateExplosion.call(this, canonBall.posX, canonBall.posY);
                    this.canonBalls.splice(i, 1);
                    this.level.aliens.splice(k, 1);
+                   pass = true;
+                }
+            }
+            if (!pass) { // building collisions
+                if (this.level.checkCollision(canonBall)) {
+                   generateExplosion.call(this, canonBall.posX, canonBall.posY);
+                   this.canonBalls.splice(i, 1);
                    pass = true;
                 }
             }
