@@ -67,6 +67,15 @@ var Ufo = {
             return newLaser;
         }
         return null;
+    },
+    checkCollision: function(projectile) {
+        if (projectile.posX > this.posX - this.width/2.0 &&
+                projectile.posX < this.posX + this.width/2.0 &&
+                projectile.posY > this.posY - this.height &&
+                projectile.posY < this.posY) {
+            return true;
+        }
+        return false;
     }
 }
 

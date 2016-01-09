@@ -66,12 +66,7 @@ function startLevel() {
 }
 
 function playGame() {
-    var i = this.canonBalls.length;
-    while (i--) {
-        if (!this.canonBalls[i].animate()) {
-            this.canonBalls.splice(i, 1);
-        }
-    }
+    var i;
 
     this.level.draw();
     this.statusBar.draw();
@@ -87,8 +82,28 @@ function playGame() {
         this.level.ufos[i].draw();
     }
     
-  
-    var i = this.lasers.length;
+    i = this.canonBalls.length;
+    while (i--) {
+        var canonBall = this.canonBalls[i];
+        canonBall.draw();
+
+        if (!canonBall.animate()) {
+            this.canonBalls.splice(i, 1);
+        }
+        else {
+            var j = this.level.ufos.length;
+            while (j--) {
+                var ufo = this.level.ufos[j];
+                if (ufo.checkCollision(canonBall)) {
+                   generateExplosion.call(this, canonBall.posX, canonBall.posY);
+                   this.canonBalls.splice(i, 1);
+                   this.level.ufos.splice(j, 1);
+                }
+            }
+        }
+    }
+
+    i = this.lasers.length;
     while(i--) {
         this.lasers[i].draw();
     
@@ -104,11 +119,7 @@ function playGame() {
         }
     }
 
-    for (var i=0; i < this.canonBalls.length; i++) {
-        this.canonBalls[i].draw();
-    }
-
-    var i = this.explosions.length;
+    i = this.explosions.length;
     while (i--) {
         this.explosions[i].draw(this.context);
         if (!this.explosions[i].animate()) {
@@ -117,8 +128,6 @@ function playGame() {
     }
     
     this.level.player.alive && this.level.player.draw();
-    
-    //detectCollisions.call(this);
 }
 
 function generateExplosion(posX, posY) {
