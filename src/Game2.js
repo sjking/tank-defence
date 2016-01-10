@@ -71,6 +71,15 @@ function playGame() {
     this.level.draw();
     this.statusBar.draw();
    
+    // draw explosions
+    i = this.explosions.length;
+    while (i--) {
+        this.explosions[i].draw(this.context);
+        if (!this.explosions[i].animate()) {
+            this.explosions.splice(i, 1);
+        }
+    }
+
     // draw enemies
     for (var i=0; i < this.level.aliens.length; i++) {
         this.level.aliens[i].draw();
@@ -140,15 +149,6 @@ function playGame() {
         }
     }
 
-    // draw explosions
-    i = this.explosions.length;
-    while (i--) {
-        this.explosions[i].draw(this.context);
-        if (!this.explosions[i].animate()) {
-            this.explosions.splice(i, 1);
-        }
-    }
-    
     this.level.player.alive && this.level.player.draw();
 }
 
