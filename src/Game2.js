@@ -6,6 +6,7 @@ var keyDecoder = require('./keyMap.js'),
     keyCode = keyDecoder.codes;
 var StatusBar = require('./StatusBar');
 var TitleScreen = require('./TitleScreen');
+var TransitionScreen = require('./TransitionScreen');
 
 const GAME_STATE = {
     PLAY: 0,
@@ -14,6 +15,7 @@ const GAME_STATE = {
     NEXT_LEVEL: 3,
     TITLE_SCREEN: 4,
     LOAD: 5,
+    READY: 7,
     WAIT: 6
 };
 const FRAME_RATE = 30;
@@ -22,13 +24,15 @@ const INTERVAL = 1000 / FRAME_RATE;
 function loadLevel(levelData) {
     this.level = Object.create(Level[levelData.type]);
     this.level.setup(this.context, levelData.data);
+    this.currentLevel++;
+    this.transitionTimer = this.transitionTime;
     this.level.load()
         .then(initGameObjects.bind(this))
         .then(setLevelBoundaries.bind(this))
         .then(setStatusBar.bind(this))
         .then(startLevel.bind(this))
         .catch(handleError.bind(this));
-    this.gameState = GAME_STATE.WAIT;
+    this.gameState = GAME_STATE.NEXT_LEVEL;
 }
 
 function handleError(err) {
@@ -63,7 +67,7 @@ function setLevelBoundaries() {
 }
 
 function startLevel() {
-    this.gameState = GAME_STATE.PLAY;
+    this.gameState = GAME_STATE.READY;
 }
 
 function playGame() {
@@ -240,6 +244,21 @@ function titleScreen() {
    this.titleScreen.draw(); 
 }
 
+function transition(text) {
+    this.transitionScreen.draw(text);
+    this.transitionTimer > 0 && this.transitionTimer--;
+}
+
+function ready() {
+    if (this.transitionTimer > 0) {
+        this.transitionScreen.draw("Level " + this.currentLevel);
+        this.transitionTimer--;
+    }
+    else {
+        this.gameState = GAME_STATE.PLAY;
+    }
+}
+
 var Game = {
     init: function(context, keyPressList) {
         this.context = context;
@@ -249,6 +268,9 @@ var Game = {
         this.titleScreen.init(context);
         this.currentLevel = 0;
         this.keyPressList = keyPressList;
+        this.transitionTime = FRAME_RATE * 2; // 2 seconds
+        this.transitionScreen = Object.create(TransitionScreen);
+        this.transitionScreen.init(context);
     },
     loop: function() {
         switch (this.gameState) {
@@ -264,7 +286,7 @@ var Game = {
                 //gameOver();
                 break;	
             case GAME_STATE.NEXT_LEVEL:
-                //transition();
+                transition.call(this, "Level " + this.currentLevel);
                 break;
             case GAME_STATE.TITLE_SCREEN:
                 detectKeyPressesTitleScreen.call(this);
@@ -272,6 +294,9 @@ var Game = {
                 break;
             case GAME_STATE.WAIT:
                 (function() {})()
+                break;
+            case GAME_STATE.READY:
+                ready.call(this);
                 break;
             default:
                 break;
