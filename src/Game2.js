@@ -5,6 +5,7 @@ var LevelOne = require('./LevelOne.js');
 var keyDecoder = require('./keyMap.js'),
     keyCode = keyDecoder.codes;
 var StatusBar = require('./StatusBar');
+var TitleScreen = require('./TitleScreen');
 
 const GAME_STATE = {
     PLAY: 0,
@@ -207,6 +208,15 @@ function detectKeyPresses() {
     }
 }
 
+function detectKeyPressesTitleScreen() {
+    var keys = this.keyPressList;
+    
+    if (keys[keyCode.START]) {
+        loadLevel.call(this, LevelOne); // TO-DO: Load other levels
+    }
+    // TO-DO: Detect mouse events, and arrow keys
+}
+
 function playerDies() {
     this.level.player.lives--;
     this.level.player.alive = false;
@@ -226,16 +236,18 @@ function waitForExplosions() {
     }
 }
 
-//function detectCollisions() {
-    // laser hitting tank
-
-//}
+function titleScreen() {
+   this.titleScreen.draw(); 
+}
 
 var Game = {
     init: function(context, keyPressList) {
         this.context = context;
-        this.gameState = GAME_STATE.LOAD;
-        this.level = 0;
+        //this.gameState = GAME_STATE.LOAD;
+        this.gameState = GAME_STATE.TITLE_SCREEN;
+        this.titleScreen = Object.create(TitleScreen);
+        this.titleScreen.init(context);
+        this.currentLevel = 0;
         this.keyPressList = keyPressList;
     },
     loop: function() {
@@ -255,10 +267,8 @@ var Game = {
                 //transition();
                 break;
             case GAME_STATE.TITLE_SCREEN:
-                //titleScreen();
-                break;
-            case GAME_STATE.LOAD:
-                loadLevel.call(this, LevelOne); // TO-DO: Load other levels
+                detectKeyPressesTitleScreen.call(this);
+                titleScreen.call(this);
                 break;
             case GAME_STATE.WAIT:
                 (function() {})()

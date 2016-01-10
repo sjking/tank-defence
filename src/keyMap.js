@@ -16,7 +16,8 @@ var keyCodeMap = {
     '40': keys.DOWN,
     '32': keys.ACTION,
     '188': keys.DECREASE_POWER,
-    '190': keys.INCREASE_POWER
+    '190': keys.INCREASE_POWER,
+    '13': keys.START
 };
 
 function keyMap(e) {

@@ -7,6 +7,7 @@ var StatusBar = {
     draw: function() {
         this.context.fillStyle = "#eee";
         this.context.font = "12pt Arial";
+        this.context.textAlign = "left";
         this.context.fillText('Power: ', 10, this.ground+25);
         this.context.fillText('Lives: ', 10, this.ground+50);
         this.context.fillText(this.player.lives, 60, this.ground+50);
