@@ -20,12 +20,15 @@ const GAME_STATE = {
 };
 const FRAME_RATE = 30;
 const INTERVAL = 1000 / FRAME_RATE;
+const STARTING_LIVES = 3;
 
-function loadLevel(levelData) {
+function loadLevel(levelData, playerLives) {
     this.level = Object.create(Level[levelData.type]);
     this.level.setup(this.context, levelData.data);
     this.currentLevel++;
     this.transitionTimer = this.transitionTime;
+    this.playerLives = this.level.player.lives ? this.level.player.lives : 
+        STARTING_LIVES;
     this.level.load()
         .then(initGameObjects.bind(this))
         .then(setLevelBoundaries.bind(this))
@@ -45,7 +48,7 @@ function initGameObjects(assets) {
     this.canonBalls = [];
     this.lasers = [];
     this.explosions = [];
-    return this.level.populate(assets); 
+    return this.level.populate(assets, this.playerLives); 
 }
 
 function setStatusBar() {
@@ -155,6 +158,12 @@ function playGame() {
     }
 
     this.level.player.alive && this.level.player.draw();
+
+    if (!this.level.ufos.length && !this.level.aliens.length && !this.explosions.length) {
+        this.transitionTimer = this.transitionTime;
+        this.gameState = GAME_STATE.NEXT_LEVEL;
+        loadLevel.call(this, LevelOne); // TO-DO: Load other levels
+    }
 }
 
 function generateExplosion(posX, posY) {

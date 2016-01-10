@@ -32,9 +32,15 @@ var Level = {
                 });
                 promises.push(fetch);
             }
+            else {
+                promises.push(Promise.resolve({ url: url, img: cache[url] }));
+            }
         });
         if (cache[scope.tileSheet]) {
             scope.image = cache[scope.tileSheet];
+            promises.push(Promise.resolve(
+                        { url: scope.tileSheet, img: cache[scope.tileSheet] })
+                    );
         }
         else {
             var fetch = new Promise(function(resolve,reject) {
@@ -116,14 +122,13 @@ LevelAlpha.setup = function(context, gameData) {
     );
 };
 
-LevelAlpha.populate = function(assets) {
+LevelAlpha.populate = function(assets, playerLives) {
     // to-do: assign each image to its object (player, ufo, alien), the
     // building image is already assigned to this level by now
     var images = _.indexBy(assets, 'url');
     
     var player = Object.create(Player);
     var playerImage = images[this.player.spriteSheet].img;
-    var playerLives = 3;
     player.init(this.context, playerImage, this.player.posX, this.player.posY,
         playerLives
     );
