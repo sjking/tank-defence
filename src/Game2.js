@@ -25,7 +25,6 @@ const STARTING_LIVES = 3;
 function loadLevel(levelData, playerLives) {
     this.level = Object.create(Level[levelData.type]);
     this.level.setup(this.context, levelData.data);
-    this.currentLevel++;
     this.transitionTimer = this.transitionTime;
     this.playerLives = this.level.player.lives ? this.level.player.lives : 
         STARTING_LIVES;
@@ -159,9 +158,11 @@ function playGame() {
 
     this.level.player.alive && this.level.player.draw();
 
+    // check if all enemies have been vanquished, and are done exploding
     if (!this.level.ufos.length && !this.level.aliens.length && !this.explosions.length) {
         this.transitionTimer = this.transitionTime;
         this.gameState = GAME_STATE.NEXT_LEVEL;
+        this.currentLevel++;
         loadLevel.call(this, LevelOne); // TO-DO: Load other levels
     }
 }
@@ -225,6 +226,7 @@ function detectKeyPressesTitleScreen() {
     var keys = this.keyPressList;
     
     if (keys[keyCode.START]) {
+        this.currentLevel = 1;
         loadLevel.call(this, LevelOne); // TO-DO: Load other levels
     }
     // TO-DO: Detect mouse events, and arrow keys
@@ -245,12 +247,23 @@ function waitForExplosions() {
         this.gameState = GAME_STATE.PLAY;
     }
     else {
-        // TO-DO: GAME OVER
+        this.transitionTimer = this.transitionTime;
+        this.gameState = GAME_STATE.GAME_OVER;
     }
 }
 
 function titleScreen() {
    this.titleScreen.draw(); 
+}
+
+function gameOver() {
+    if (this.transitionTimer > 0) {
+        this.transitionScreen.draw("Game Over");
+        this.transitionTimer--;
+    }
+    else {
+        this.gameState = GAME_STATE.TITLE_SCREEN;
+    }
 }
 
 function transition(text) {
@@ -275,7 +288,6 @@ var Game = {
         this.gameState = GAME_STATE.TITLE_SCREEN;
         this.titleScreen = Object.create(TitleScreen);
         this.titleScreen.init(context);
-        this.currentLevel = 0;
         this.keyPressList = keyPressList;
         this.transitionTime = FRAME_RATE * 2; // 2 seconds
         this.transitionScreen = Object.create(TransitionScreen);
@@ -288,11 +300,10 @@ var Game = {
                 playGame.call(this);
                 break;
             case GAME_STATE.DIE:
-                //transition()
                 waitForExplosions.call(this);
                 break;
             case GAME_STATE.GAME_OVER:
-                //gameOver();
+                gameOver.call(this);
                 break;	
             case GAME_STATE.NEXT_LEVEL:
                 transition.call(this, "Level " + this.currentLevel);
