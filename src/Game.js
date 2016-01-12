@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-var Level = require('./Level2.js');
+var Level = require('./Level.js');
 var LevelOne = require('./LevelOne.js');
 var keyDecoder = require('./keyMap.js'),
     keyCode = keyDecoder.codes;

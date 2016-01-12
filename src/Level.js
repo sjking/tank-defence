@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var Player = require('./Player.js');
 var Alien = require('./Alien.js');
-var Ufo = require('./Ufo2.js');
+var Ufo = require('./Ufo.js');
 var Explosion = require('./Explosion');
 
 var cache = {};
