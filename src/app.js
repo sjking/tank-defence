@@ -1,4 +1,4 @@
-var Game = require('./Game2.js');
+var Game = require('./Game.js');
 var keyDetector = require('./keyDetector.js');
 
 window.addEventListener('load', eventWindowLoaded, false);	
