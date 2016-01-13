@@ -1,5 +1,5 @@
 var test = require('tape');
-var level = require('../Level2.js');
+var level = require('../Level.js');
 var _ = require('underscore');
 
 // Test LevelAlpha: level 1
@@ -57,11 +57,12 @@ var levelOneGameData = {
 };
 
 var alpha = Object.create(level.alpha);
+var ø = Object.create(null);
 
 test('setup level one', function(t) {
     t.plan(6);
     
-    alpha.setup(null, levelOneGameData);
+    alpha.setup(ø, levelOneGameData);
 
     var assets = [
         levelOneGameData.spriteSheet,
@@ -73,7 +74,7 @@ test('setup level one', function(t) {
 
     t.deepLooseEqual(difference, [], "assets are setup");
 
-    t.equal(alpha.tileSheet, levelOneGameData.tileSheet, "tilesheet is setup");
+    t.equal(alpha.tileSheet, levelOneGameData.spriteSheet, "tilesheet is setup");
     t.equal(alpha.buildings, levelOneGameData.buildings, "buildings are setup");
     t.equal(alpha.player, levelOneGameData.player, "player is setup");
     t.equal(alpha.ufos, levelOneGameData.ufos, "ufos are setup");
