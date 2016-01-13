@@ -5,7 +5,9 @@
   "author": "Steve King https://codecity.ca",
   "dependencies": {
     "underscore": "*",
-    "expect.js": "~0.3.1"
+    "expect.js": "~0.3.1",
+    "fs": "*",
+    "bluebird": "*"
   },
   "devDependencies": {
     "tape": "^2.13.1",
