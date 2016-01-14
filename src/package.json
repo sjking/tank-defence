@@ -7,7 +7,8 @@
     "underscore": "*",
     "expect.js": "~0.3.1",
     "fs": "*",
-    "bluebird": "*"
+    "bluebird": "*",
+    "underscore.string": "*"
   },
   "devDependencies": {
     "tape": "^2.13.1",
