@@ -4,15 +4,21 @@
   "description": "HTML5 Action Game",
   "author": "Steve King https://codecity.ca",
   "dependencies": {
+    "bluebird": "*",
+    "expect.js": "~0.3.1",
+    "express": "^4.13.3",
+    "fs": "*",
     "underscore": "*",
-    "expect.js": "~0.3.1"
+    "underscore.string": "*"
   },
   "devDependencies": {
     "tape": "^2.13.1",
     "tap-spec": "*"
   },
   "scripts": {
-    "test": "tape test/*.js | tap-spec"
+    "test": "tape test/*.js | tap-spec",
+    "build": "browserify app.js > server/build/bundle.js",
+    "start": "node server/main.js"
   },
   "repository": {
     "type": "git",
