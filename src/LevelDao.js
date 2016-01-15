@@ -1,4 +1,3 @@
-var Promise = require('bluebird');
 var fs = require('fs'),
     readFile = Promise.promisify(fs.readFile);
 

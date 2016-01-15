@@ -21,7 +21,7 @@ function initTest(body) {
     var LevelDao = script.runInNewContext(context);
 
     LevelDao.init(true, levelDir);
-    LevelDao.fetch("levelOne").then(runTests);
+    LevelDao.fetch("level001").then(runTests);
 }
 
 function runTests(LevelData) {
