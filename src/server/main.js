@@ -4,6 +4,7 @@ var express = require('express'),
 app.use(express.static(__dirname + '/html'));
 app.use(express.static(__dirname + '/build'));
 app.use(express.static(__dirname + '/lib'));
+app.use(express.static(__dirname + '/styles'));
 app.use('/assets', express.static(__dirname + '/assets'));
 
 const PORT = 3000;
