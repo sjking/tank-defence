@@ -5,7 +5,7 @@
 }
 
 .close-button {
-	background:url('../img/close-button.png') no-repeat top left;
+	background:url('/assets/close-button.png') no-repeat top left;
 	display: inline-block;
 	height: 44px;
 	width: 44px;
@@ -13,7 +13,7 @@
 }
 
 .close-button:hover {
-	background:url('../img/close-button-hover.png') no-repeat top left;
+	background:url('/assets/close-button-hover.png') no-repeat top left;
 	display: inline-block;
 	height: 44px;
 	width: 44px;
