@@ -17,7 +17,7 @@
   },
   "scripts": {
     "test": "tape test/*.js | tap-spec",
-    "build": "browserify app.js > server/build/bundle.js",
+    "compile": "browserify app.js > server/build/bundle.js",
     "start": "node server/main.js"
   },
   "repository": {
