@@ -78,7 +78,8 @@ var Level = {
     },
     checkCollision: function(projectile) {
         var p = projectile;
-
+        // Note: the building.y is the position from the top of the canvas, not
+        // the building height
         for (var i=0; i < this.buildings.length; i++) {
             var b = this.buildings[i].bounds; 
             if (p.posX > b.x && p.posX < b.width + b.x && p.posY > b.y) {

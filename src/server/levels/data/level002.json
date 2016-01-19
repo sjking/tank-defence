@@ -21,7 +21,7 @@
     "buildings": [
         {
             "edge": 352,
-            "bounds": { "x": 352, "y": 160, "width": 160 }
+            "bounds": { "x": 352, "y": 224, "width": 160 }
         }
     ],
     "spriteSheet": "assets/building_32x32.png",
