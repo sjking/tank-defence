@@ -97,6 +97,7 @@ LevelAlpha.setup = function(context, gameData) {
     this.ufos = gameData.ufos;
     this.aliens = gameData.aliens;
     this.explosions = gameData.explosions;
+    this.groundPosX = gameData.groundPosX;
 
     function mapAssets(gameData) {
         var mapped = [
@@ -124,14 +125,12 @@ LevelAlpha.setup = function(context, gameData) {
 };
 
 LevelAlpha.populate = function(assets, playerLives) {
-    // to-do: assign each image to its object (player, ufo, alien), the
-    // building image is already assigned to this level by now
     var images = _.indexBy(assets, 'url');
     
     var player = Object.create(Player);
     var playerImage = images[this.player.spriteSheet].img;
     player.init(this.context, playerImage, this.player.posX, this.player.posY,
-        playerLives
+        playerLives, this.groundPosX
     );
     this.player = player;
 

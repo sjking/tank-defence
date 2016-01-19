@@ -24,6 +24,7 @@
             "bounds": { "x": 352, "y": 160, "width": 160 }
         }
     ],
+    "groundPosX": 416,
     "spriteSheet": "assets/building_32x32.png",
     "player": {
         "spriteSheet": "assets/tank_sheet_sm.png",
