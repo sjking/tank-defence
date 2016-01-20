@@ -1,11 +1,21 @@
 var express = require('express'),
-    app = express();
+    app = express(),
+    levelLoader = require('./levels/LevelLoader');
 
 app.use(express.static(__dirname + '/html'));
 app.use(express.static(__dirname + '/build'));
 app.use(express.static(__dirname + '/lib'));
 app.use(express.static(__dirname + '/styles'));
 app.use('/assets', express.static(__dirname + '/assets'));
+
+app.get('/level', function(req, res) {
+    var levelNumber = req.query.number;
+    levelLoader.get(levelNumber).then(function(json) {
+        res.send(json);
+    }).catch(function(error) {
+        res.sendStatus(404);
+    });
+});
 
 const PORT = 3000;
 

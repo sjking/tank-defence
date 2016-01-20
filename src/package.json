@@ -8,6 +8,7 @@
     "expect.js": "~0.3.1",
     "express": "^4.13.3",
     "fs": "*",
+    "jquery": "^2.2.0",
     "underscore": "*",
     "underscore.string": "*"
   },

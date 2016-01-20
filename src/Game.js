@@ -1,12 +1,12 @@
 var _ = require('underscore');
 
 var Level = require('./Level.js');
-var LevelOne = require('./LevelOne.js');
 var keyDecoder = require('./keyMap.js'),
     keyCode = keyDecoder.codes;
 var StatusBar = require('./StatusBar');
 var TitleScreen = require('./TitleScreen');
 var TransitionScreen = require('./TransitionScreen');
+var LevelLoader = require('./LevelLoader');
 
 const GAME_STATE = {
     PLAY: 0,
@@ -22,25 +22,34 @@ const FRAME_RATE = 30;
 const INTERVAL = 1000 / FRAME_RATE;
 const STARTING_LIVES = 3;
 
-function loadLevel(levelData, playerLives) {
-    this.level = Object.create(Level[levelData.type]);
-    this.level.setup(this.context, levelData.data);
-    this.transitionTimer = this.transitionTime;
-    this.playerLives = this.level.player.lives ? this.level.player.lives : 
-        STARTING_LIVES;
-    this.level.load()
-        .then(initGameObjects.bind(this))
-        .then(setLevelBoundaries.bind(this))
-        .then(setStatusBar.bind(this))
-        .then(startLevel.bind(this))
+function loadLevel(levelNumber) {
+    this.levelLoader.get(levelNumber)
+        .then(levelLoaded.bind(this))
         .catch(handleError.bind(this));
-    this.gameState = GAME_STATE.NEXT_LEVEL;
 }
 
 function handleError(err) {
     var msg = err.toString() + "\nfilename: " + err.fileName +
         "\nline number: " + err.lineNumber + "\ncolumn: " + err.columnNumber;
     alert(msg);
+}
+
+function levelLoaded(level) {
+    if (level.complete) {
+        this.gameState = GAME_STATE.COMPLETE;    
+        this.transitionTimer = this.transitionTime;
+    }
+    else {
+        this.gameState = GAME_STATE.NEXT_LEVEL;
+        this.level = level;
+        this.transitionTimer = this.transitionTime;
+        this.level.load()
+            .then(initGameObjects.bind(this))
+            .then(setLevelBoundaries.bind(this))
+            .then(setStatusBar.bind(this))
+            .then(startLevel.bind(this))
+            .catch(handleError.bind(this));
+    }
 }
 
 function initGameObjects(assets) {
@@ -162,8 +171,7 @@ function playGame() {
     if (!this.level.ufos.length && !this.level.aliens.length && !this.explosions.length) {
         this.transitionTimer = this.transitionTime;
         this.gameState = GAME_STATE.NEXT_LEVEL;
-        this.currentLevel++;
-        loadLevel.call(this, LevelOne); // TO-DO: Load other levels
+        loadLevel.call(this, ++this.currentLevel); // TO-DO: Load other levels
     }
 }
 
@@ -227,13 +235,13 @@ function detectKeyPressesTitleScreen() {
     
     if (keys[keyCode.START]) {
         this.currentLevel = 1;
-        loadLevel.call(this, LevelOne); // TO-DO: Load other levels
+        loadLevel.call(this, 1); // TO-DO: Load other levels
     }
     // TO-DO: Detect mouse events, and arrow keys
 }
 
 function playerDies() {
-    this.level.player.lives--;
+    this.playerLives = --this.level.player.lives;
     this.level.player.alive = false;
     this.gameState = GAME_STATE.DIE;
 }
@@ -259,6 +267,16 @@ function titleScreen() {
 function gameOver() {
     if (this.transitionTimer > 0) {
         this.transitionScreen.draw("Game Over");
+        this.transitionTimer--;
+    }
+    else {
+        this.gameState = GAME_STATE.TITLE_SCREEN;
+    }
+}
+
+function complete() {
+    if (this.transitionTimer > 0) {
+        this.transitionScreen.draw("Congratulations, You Win!");
         this.transitionTimer--;
     }
     else {
@@ -292,6 +310,9 @@ var Game = {
         this.transitionTime = FRAME_RATE * 2; // 2 seconds
         this.transitionScreen = Object.create(TransitionScreen);
         this.transitionScreen.init(context);
+        this.levelLoader = Object.create(LevelLoader);
+        this.levelLoader.init(context); // TO-DO: config base url
+        this.playerLives = STARTING_LIVES;
     },
     loop: function() {
         switch (this.gameState) {
@@ -311,6 +332,9 @@ var Game = {
             case GAME_STATE.TITLE_SCREEN:
                 detectKeyPressesTitleScreen.call(this);
                 titleScreen.call(this);
+                break;
+            case GAME_STATE.COMPLETE:
+                complete.call(this);
                 break;
             case GAME_STATE.WAIT:
                 (function() {})()
