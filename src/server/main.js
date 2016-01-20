@@ -11,7 +11,6 @@ app.use('/assets', express.static(__dirname + '/assets'));
 app.get('/level', function(req, res) {
     var levelNumber = req.query.number;
     levelLoader.get(levelNumber).then(function(json) {
-        console.log("sending level: ", json);
         res.send(json);
     }).catch(function(error) {
         res.sendStatus(404);
