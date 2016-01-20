@@ -17,8 +17,9 @@ var LevelLoader = {
 };
 
 function loadLevel(levelData) {
-    var bob = "fred";
-    //console.log("levelData: ", levelData);
+    if (levelData.complete) {
+        return levelData;
+    }
     var level = Object.create(Level[levelData.type]);
     level.setup(this.context, levelData.data);
     return level;

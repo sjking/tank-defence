@@ -26,7 +26,6 @@ function loadLevel(levelNumber) {
     this.levelLoader.get(levelNumber)
         .then(levelLoaded.bind(this))
         .catch(handleError.bind(this));
-    this.gameState = GAME_STATE.NEXT_LEVEL;
 }
 
 function handleError(err) {
@@ -36,14 +35,21 @@ function handleError(err) {
 }
 
 function levelLoaded(level) {
-    this.level = level;
-    this.transitionTimer = this.transitionTime;
-    this.level.load()
-        .then(initGameObjects.bind(this))
-        .then(setLevelBoundaries.bind(this))
-        .then(setStatusBar.bind(this))
-        .then(startLevel.bind(this))
-        .catch(handleError.bind(this));
+    if (level.complete) {
+        this.gameState = GAME_STATE.COMPLETE;    
+        this.transitionTimer = this.transitionTime;
+    }
+    else {
+        this.gameState = GAME_STATE.NEXT_LEVEL;
+        this.level = level;
+        this.transitionTimer = this.transitionTime;
+        this.level.load()
+            .then(initGameObjects.bind(this))
+            .then(setLevelBoundaries.bind(this))
+            .then(setStatusBar.bind(this))
+            .then(startLevel.bind(this))
+            .catch(handleError.bind(this));
+    }
 }
 
 function initGameObjects(assets) {
@@ -268,6 +274,16 @@ function gameOver() {
     }
 }
 
+function complete() {
+    if (this.transitionTimer > 0) {
+        this.transitionScreen.draw("Congratulations, You Win!");
+        this.transitionTimer--;
+    }
+    else {
+        this.gameState = GAME_STATE.TITLE_SCREEN;
+    }
+}
+
 function transition(text) {
     this.transitionScreen.draw(text);
     this.transitionTimer > 0 && this.transitionTimer--;
@@ -316,6 +332,9 @@ var Game = {
             case GAME_STATE.TITLE_SCREEN:
                 detectKeyPressesTitleScreen.call(this);
                 titleScreen.call(this);
+                break;
+            case GAME_STATE.COMPLETE:
+                complete.call(this);
                 break;
             case GAME_STATE.WAIT:
                 (function() {})()
