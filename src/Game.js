@@ -171,7 +171,7 @@ function playGame() {
     if (!this.level.ufos.length && !this.level.aliens.length && !this.explosions.length) {
         this.transitionTimer = this.transitionTime;
         this.gameState = GAME_STATE.NEXT_LEVEL;
-        loadLevel.call(this, ++this.currentLevel); // TO-DO: Load other levels
+        loadLevel.call(this, ++this.currentLevel);
     }
 }
 
