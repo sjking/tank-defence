@@ -302,7 +302,6 @@ function ready() {
 var Game = {
     init: function(context, keyPressList) {
         this.context = context;
-        //this.gameState = GAME_STATE.LOAD;
         this.gameState = GAME_STATE.TITLE_SCREEN;
         this.titleScreen = Object.create(TitleScreen);
         this.titleScreen.init(context);
