@@ -12,11 +12,9 @@ var LevelDaoClient = {
                 type: 'GET',
                 url: url,
                 success: function(data) {
-                    console.log("data: ", data);
                     resolve(data);
                 },
                 error: function(error) {
-                    console.log("error: ", error);
                     reject(error);
                 }
             });
