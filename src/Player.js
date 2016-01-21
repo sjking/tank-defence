@@ -7,7 +7,7 @@ var Player = {
         this.lives = lives;
         this.posX = posX;
         this.posY = posY;
-        this.ground = ground; // TO-DO: this shouldn't be hard-coded
+        this.ground = ground;
        
         // defaults, or starting values
         this.turretPos = 0;
