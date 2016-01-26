@@ -1,36 +1,13 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow: hidden;
+}
+
 #tank {
-  	width: 640px; 
-  	margin: 0 auto;
-  	margin-top:1.6em;
-}
-
-.close-button {
-	background:url('/assets/close-button.png') no-repeat top left;
-	display: inline-block;
-	height: 44px;
-	width: 44px;
-	cursor: pointer;
-}
-
-.close-button:hover {
-	background:url('/assets/close-button-hover.png') no-repeat top left;
-	display: inline-block;
-	height: 44px;
-	width: 44px;
-	cursor: pointer;
-}
-
-.close-button-container {
-	float: right;
-	margin: 1.6em;
-}
-
-.play-tank {
-	float: right;
-}
-
-img.center {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+	margin: 0;
+	padding: 0;
 }

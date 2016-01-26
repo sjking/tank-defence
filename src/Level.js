@@ -13,6 +13,7 @@ var Level = {
         this.buildings = buildings;
         this.tileSheet = tileSheet;
         this.assets = assets;
+        this.scale = 1.0;
     },
     load: function() {
         var scope = this;
@@ -98,11 +99,14 @@ LevelAlpha.setup = function(context, gameData) {
     this.aliens = gameData.aliens;
     this.explosions = gameData.explosions;
     this.groundPosX = gameData.groundPosX;
+    this.baseWidth = gameData.width;
+    this.baseHeight = gameData.height;
+    this.aspectRatio = gameData.width / gameData.height;
 
     function mapAssets(gameData) {
         var mapped = [
             gameData.spriteSheet,
-            gameData.player.spriteSheet,
+            gameData.player.spriteSheet
         ];
         
         mapped.push(_.map(gameData.ufos, function(ufo) {
@@ -156,11 +160,12 @@ LevelAlpha.populate = function(assets, playerLives) {
     });
     this.aliens = newAliens;
 
+    var baseWidth = this.baseWidth;
     function makeUfo(ufo) {
         var newUfo = Object.create(Ufo);
         var ufoImage = images[ufo.spriteSheet].img;
         newUfo.init(context, ufo.posX, ufo.posY, ufo.dx, ufo.dy, 
-                ufo.laserFrequency, ufoImage
+                ufo.laserFrequency, ufoImage, baseWidth
         );
         return newUfo;
     }
@@ -182,6 +187,11 @@ LevelAlpha.populate = function(assets, playerLives) {
     this.explosions = explosions;
 
     return Promise.resolve();
+};
+
+LevelAlpha.rescale = function(width, height) {
+    var factor = (width / height < this.aspectRatio) ? (width / this.baseWidth) : (height / this.baseHeight);
+    this.scale = factor;
 };
 
 module.exports = {
