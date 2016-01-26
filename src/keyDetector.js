@@ -6,12 +6,14 @@ var keyPressList = {};
 var keyDetector = {
     keyDown: function handleKeyPress(e) {
         e = e ? e : this.defaultEvent;
+        e.preventDefault();
         if (keyMap(e)) {
             this.list[keyMap(e)] = true;
         }
     },
     keyUp: function handleKeyRelease(e) {
         e = e ? e : this.defaultEvent;
+        e.preventDefault();
         if (keyMap(e)) {
             this.list[keyMap(e)] = false;
         }

@@ -22,6 +22,10 @@ const FRAME_RATE = 30;
 const INTERVAL = 1000 / FRAME_RATE;
 const STARTING_LIVES = 3;
 
+const BASE_VIEWPORT_WIDTH = 640;
+const BASE_VIEWPORT_HEIGHT = 480;
+const BASE_VIEWPORT_ASPECT_RATIO = BASE_VIEWPORT_WIDTH / BASE_VIEWPORT_HEIGHT;
+
 function loadLevel(levelNumber) {
     this.levelLoader.get(levelNumber)
         .then(levelLoaded.bind(this))
@@ -61,27 +65,34 @@ function initGameObjects(assets) {
 
 function setStatusBar() {
     this.statusBar = Object.create(StatusBar);
-    this.statusBar.init(this.context, this.level.player);
+    this.statusBar.init(this.context, this.level.player, BASE_VIEWPORT_HEIGHT);
 }
 
 function setLevelBoundaries() {
     var buildings = this.level.buildings;
-    var edge = this.context.canvas.width;
+    var edge = this.level.baseWidth;
     for (var i=0; i < buildings.length; i++) {
        if (buildings[i].edge < edge) {
            edge = buildings[i].edge;
        }
     }
-    this.level.buildingBoundary = edge;     
+    this.level.buildingBoundary = edge;
 
     return Promise.resolve();
 }
 
+function rescaleLevel() {
+    this.level.rescale(this.windowOnResize.width, this.windowOnResize.height);
+    this.canvasResizer.resize(this.level.baseWidth * this.level.scale, this.level.baseHeight * this.level.scale);
+}
+
 function startLevel() {
+    rescaleLevel.call(this);
     this.gameState = GAME_STATE.READY;
 }
 
 function playGame() {
+    this.context.scale(this.level.scale, this.level.scale);
     var i;
 
     this.level.draw();
@@ -173,6 +184,8 @@ function playGame() {
         this.gameState = GAME_STATE.NEXT_LEVEL;
         loadLevel.call(this, ++this.currentLevel);
     }
+
+    this.context.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 function generateExplosion(posX, posY) {
@@ -261,7 +274,9 @@ function waitForExplosions() {
 }
 
 function titleScreen() {
-   this.titleScreen.draw(); 
+    this.context.scale(this.viewportScale, this.viewportScale);
+    this.titleScreen.draw();
+    this.context.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 function gameOver() {
@@ -270,6 +285,7 @@ function gameOver() {
         this.transitionTimer--;
     }
     else {
+        this.playerLives = STARTING_LIVES;
         this.gameState = GAME_STATE.TITLE_SCREEN;
     }
 }
@@ -299,12 +315,27 @@ function ready() {
     }
 }
 
+function windowResized() {
+    if (this.level) {
+        rescaleLevel.call(this);
+    }
+    else {
+        scaleViewport.call(this, this.windowOnResize.width, this.windowOnResize.height);
+    }
+}
+
+// For scaling the transition screens, and title screen
+function scaleViewport(width, height) {
+    this.viewportScale = (width / height < BASE_VIEWPORT_ASPECT_RATIO) ? (width / BASE_VIEWPORT_WIDTH) : (height / BASE_VIEWPORT_HEIGHT);
+    this.canvasResizer.resize(BASE_VIEWPORT_WIDTH * this.viewportScale, BASE_VIEWPORT_HEIGHT * this.viewportScale);
+}
+
 var Game = {
-    init: function(context, keyPressList) {
+    init: function(context, keyPressList, windowOnResize, resizeCanvas) {
         this.context = context;
         this.gameState = GAME_STATE.TITLE_SCREEN;
         this.titleScreen = Object.create(TitleScreen);
-        this.titleScreen.init(context);
+        this.titleScreen.init(context, BASE_VIEWPORT_WIDTH, BASE_VIEWPORT_HEIGHT);
         this.keyPressList = keyPressList;
         this.transitionTime = FRAME_RATE * 2; // 2 seconds
         this.transitionScreen = Object.create(TransitionScreen);
@@ -312,6 +343,10 @@ var Game = {
         this.levelLoader = Object.create(LevelLoader);
         this.levelLoader.init(context); // TO-DO: config base url
         this.playerLives = STARTING_LIVES;
+        this.windowOnResize = windowOnResize;
+        this.canvasResizer = resizeCanvas;
+        scaleViewport.call(this, this.windowOnResize.width, this.windowOnResize.height);
+        this.windowOnResize.on('resize', windowResized.bind(this));
     },
     loop: function() {
         switch (this.gameState) {
@@ -336,7 +371,7 @@ var Game = {
                 complete.call(this);
                 break;
             case GAME_STATE.WAIT:
-                (function() {})()
+                (function() {})();
                 break;
             case GAME_STATE.READY:
                 ready.call(this);

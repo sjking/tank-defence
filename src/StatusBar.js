@@ -1,8 +1,8 @@
 var StatusBar = {
-    init: function(context, player) {
+    init: function(context, player, baseHeight) {
         this.context = context;
         this.player = player;
-        this.posY = this.context.canvas.height - 64;
+        this.posY = baseHeight - 64;
     },
     draw: function() {
         this.context.fillStyle = "#eee";

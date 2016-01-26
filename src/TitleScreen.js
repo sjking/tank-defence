@@ -6,12 +6,14 @@ const LARGE_FONT = "16pt Arial";
 const SMALL_FONT = "10pt Arial";
 
 var TitleScreen = {
-    init: function(context) {
+    init: function(context, baseWidth, baseHeight) {
         this.context = context;
+        this.baseWidth = baseWidth;
+        this.baseHeight = baseHeight;
         this.title = "Tank Defence";
         this.subtitle = "© 2016 codecity.ca";
         this.startButton = createButton(context, "Start", 
-                context.canvas.width/2, context.canvas.height/2);
+                this.baseWidth/2, this.baseHeight/2);
     },
     draw: function() {
         this.context.fillStyle = BACKGROUND_COLOR;
@@ -21,12 +23,12 @@ var TitleScreen = {
         this.context.fillStyle = DEFAULT_BUTTON_COLOR;
         this.context.font = LARGE_FONT;
         this.context.textAlign = "center";
-        this.context.fillText(this.title, this.context.canvas.width/2, 
-                this.context.canvas.height/4);
+        this.context.fillText(this.title, this.baseWidth/2,
+                this.baseHeight/4);
 
         this.context.font = SMALL_FONT;
-        this.context.fillText(this.subtitle, this.context.canvas.width/2,
-                this.context.canvas.height/3);
+        this.context.fillText(this.subtitle, this.baseWidth/2,
+                this.baseHeight/3);
 
         this.startButton.draw();
     }

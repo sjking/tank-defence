@@ -22,7 +22,7 @@ var Laser = {
         this.context.fillStyle = "#ffffff";
         this.context.beginPath();
         this.context.arc(Math.floor(this.posX), Math.floor(this.posY), 
-                         this.radius, 0, Math.PI/180 * 360, false
+                         this.radius * this.scale, 0, Math.PI/180 * 360, false
         );
         this.context.closePath();
         this.context.fill();
