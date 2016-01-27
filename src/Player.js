@@ -1,13 +1,14 @@
 var CanonBall = require('./CanonBall.js');
 
 var Player = {
-    init: function(context, image, posX, posY, lives, ground) {
+    init: function(context, image, posX, posY, lives, ground, baseCanvasHeight) {
         this.context = context;
         this.spriteSheet = image;
         this.lives = lives;
         this.posX = posX;
         this.posY = posY;
         this.ground = ground;
+        this.baseCanvasHeight = baseCanvasHeight;
        
         // defaults, or starting values
         this.turretPos = 0;
@@ -59,7 +60,7 @@ var Player = {
             var dx = Math.cos(rad) * this.canonBallSpeed;
             var dy = Math.sin(rad) * this.canonBallSpeed;
             var canonBall = Object.create(CanonBall);
-            canonBall.init(this.context, xPos, yPos, dx, dy);
+            canonBall.init(this.context, xPos, yPos, dx, dy, this.baseCanvasHeight);
             return canonBall;
         }
         else {

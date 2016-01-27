@@ -134,7 +134,7 @@ LevelAlpha.populate = function(assets, playerLives) {
     var player = Object.create(Player);
     var playerImage = images[this.player.spriteSheet].img;
     player.init(this.context, playerImage, this.player.posX, this.player.posY,
-        playerLives, this.groundPosX
+        playerLives, this.groundPosX, this.baseHeight
     );
     this.player = player;
 
