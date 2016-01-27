@@ -161,11 +161,12 @@ LevelAlpha.populate = function(assets, playerLives) {
     this.aliens = newAliens;
 
     var baseWidth = this.baseWidth;
+    var baseHeight = this.baseHeight;
     function makeUfo(ufo) {
         var newUfo = Object.create(Ufo);
         var ufoImage = images[ufo.spriteSheet].img;
         newUfo.init(context, ufo.posX, ufo.posY, ufo.dx, ufo.dy, 
-                ufo.laserFrequency, ufoImage, baseWidth
+                ufo.laserFrequency, ufoImage, baseWidth, baseHeight
         );
         return newUfo;
     }

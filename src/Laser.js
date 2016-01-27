@@ -1,7 +1,8 @@
 var Laser = {
-    init: function(context, targetX, targetY, sourceX, sourceY, speed) {
+    init: function(context, targetX, targetY, sourceX, sourceY, speed, baseCanvasHeight) {
         this.context = context; 
-        this.speed = speed; 
+        this.speed = speed;
+        this.baseCanvasHeight = baseCanvasHeight;
 
         var distX = targetX - sourceX;
         var distY = targetY - sourceY;
@@ -16,13 +17,13 @@ var Laser = {
     animate: function () {
         this.posX += this.dx;
         this.posY += this.dy;
-        return this.posY <= this.context.canvas.height;
+        return this.posY <= this.baseCanvasHeight;
     },
     draw: function() {
         this.context.fillStyle = "#ffffff";
         this.context.beginPath();
         this.context.arc(Math.floor(this.posX), Math.floor(this.posY), 
-                         this.radius * this.scale, 0, Math.PI/180 * 360, false
+                         this.radius, 0, Math.PI/180 * 360, false
         );
         this.context.closePath();
         this.context.fill();
