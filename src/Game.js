@@ -39,9 +39,11 @@ function handleError(err) {
 }
 
 function levelLoaded(level) {
-    if (level.complete) {
+    if (level.complete) { // if all levels are passed, the game is won
         this.gameState = GAME_STATE.COMPLETE;    
         this.transitionTimer = this.transitionTime;
+        this.level = null;
+        this.playerLives = STARTING_LIVES;
     }
     else {
         this.gameState = GAME_STATE.NEXT_LEVEL;
