@@ -67,7 +67,7 @@ function initGameObjects(assets) {
 
 function setStatusBar() {
     this.statusBar = Object.create(StatusBar);
-    this.statusBar.init(this.context, this.level.player, BASE_VIEWPORT_HEIGHT);
+    this.statusBar.init(this.context, this.level.player, this.level.baseHeight);
 }
 
 function setLevelBoundaries() {

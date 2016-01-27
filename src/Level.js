@@ -61,13 +61,13 @@ var Level = {
         return Promise.all(promises);
     },
     draw: function() {
-        var mapRows = 15;
-        var mapCols = 20;
+        var tileSize = 32;
+        var mapRows = this.tileMap.length;
+        var mapCols = this.tileMap[0].length;
         var mapIndexOffset = -1;
         for (var i=0; i < mapRows; i++) {
             for (var j=0; j < mapCols; j++) {
                 var tileId = this.tileMap[i][j] + mapIndexOffset;
-                var tileSize = 32;
                 var sourceX = tileId*tileSize;
                 var sourceY = 0;
                 this.context.drawImage(

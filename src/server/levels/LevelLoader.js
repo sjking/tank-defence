@@ -2,7 +2,7 @@
 var LevelDao = require('./LevelDao'),
     Promise = require('bluebird');
 
-const TOTAL_LEVELS = 2;
+const TOTAL_LEVELS = 3;
 
 var LevelLoader = {
     get: function(levelNumber) {
