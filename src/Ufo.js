@@ -2,7 +2,7 @@ var Laser = require('./Laser');
 
 var Ufo = {
     init: function(context, posX, posY, dx, dy, laserFrequency, image,
-                   baseCanvasWidth, baseCanvasHeight) {
+                   baseCanvasWidth, baseCanvasHeight, yBoundary) {
         this.context = context; 
         this.posX = posX;
         this.posY = posY;
@@ -11,6 +11,7 @@ var Ufo = {
         this.spriteSheet = image;
         this.baseCanvasWidth = baseCanvasWidth;
         this.baseCanvasHeight = baseCanvasHeight;
+        this.yBoundary = yBoundary;
         this.frameIndex = 0;
         this.animationCounter = 0;
         this.width = 119;
@@ -46,14 +47,20 @@ var Ufo = {
             this.animationCounter = 0;
         }
         
-        this.posX += this.forwards ? this.dx : -this.dx;
-        this.posY += this.up ? this.dy : -this.dy;
         if (this.posX > this.baseCanvasWidth - this.width/2) {
             this.forwards = false;
         }
         if (this.posX < this.width/2) {
             this.forwards = true;
         }
+        if (this.posY < 0 + this.height) {
+            this.up = false;
+        }
+        if (this.posY > this.yBoundary) {
+            this.up = true;
+        }
+        this.posX += this.forwards ? this.dx : -this.dx;
+        this.posY += this.up ? -this.dy : this.dy;
 
         if (this.laserCounter > this.laserFrequency && 
                 this.posX < buildingBoundary && player.alive) {

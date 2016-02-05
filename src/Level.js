@@ -166,7 +166,7 @@ LevelAlpha.populate = function(assets, playerLives) {
         var newUfo = Object.create(Ufo);
         var ufoImage = images[ufo.spriteSheet].img;
         newUfo.init(context, ufo.posX, ufo.posY, ufo.dx, ufo.dy, 
-                ufo.laserFrequency, ufoImage, baseWidth, baseHeight
+                ufo.laserFrequency, ufoImage, baseWidth, baseHeight, ufo.yBoundary || false
         );
         return newUfo;
     }
