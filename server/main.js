@@ -3,7 +3,12 @@ var express = require('express'),
     levelLoader = require('./levels/LevelLoader');
 
 app.use(express.static(__dirname + '/html'));
-app.use(express.static(__dirname + '/build'));
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(__dirname + '/dist'));
+} else {
+  app.use(express.static(__dirname + '/build'));
+}
 app.use(express.static(__dirname + '/lib'));
 app.use(express.static(__dirname + '/styles'));
 app.use('/assets', express.static(__dirname + '/assets'));
