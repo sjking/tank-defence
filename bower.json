@@ -1,0 +1,22 @@
+{
+  "name": "tank-defense",
+  "description": "HTML5 Action Game",
+  "main": "",
+  "authors": [
+    "Steve King https://codecity.ca"
+  ],
+  "license": "AGPL-3.0",
+  "homepage": "https://github.com/sjking/tank-defence",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "modernizr": "^3.3.1"
+  }
+}
