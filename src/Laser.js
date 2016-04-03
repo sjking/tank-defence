@@ -1,7 +1,8 @@
 var Laser = {
-    init: function(context, targetX, targetY, sourceX, sourceY, speed) {
+    init: function(context, targetX, targetY, sourceX, sourceY, speed, baseCanvasHeight) {
         this.context = context; 
-        this.speed = speed; 
+        this.speed = speed;
+        this.baseCanvasHeight = baseCanvasHeight;
 
         var distX = targetX - sourceX;
         var distY = targetY - sourceY;
@@ -16,7 +17,7 @@ var Laser = {
     animate: function () {
         this.posX += this.dx;
         this.posY += this.dy;
-        return this.posY <= this.context.canvas.height;
+        return this.posY <= this.baseCanvasHeight;
     },
     draw: function() {
         this.context.fillStyle = "#ffffff";

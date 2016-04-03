@@ -1,28 +1,25 @@
-var pad = require("underscore.string/pad");
-
-var LevelDao = require('./LevelDao'),
+// TO-DO: This is for the client-side, the other LevelLoader will reside on the
+// server. Need to re-organize project.
+var LevelDaoClient = require('./LevelDaoClient'),
     Level = require('./Level');
 
-const LEVEL_PREFIX = "level";
-const PAD = 3;
-
-// TO-DO: get from config module
-const BASE_URL = __dirname + "/levels"; 
-const LOCAL = true; 
+const BASE_URL = "http://localhost:3000"; // TO-DO: config
 
 var LevelLoader = {
-    init: function(context) {
+    init: function(context, baseUrl) {
         this.context = context;
-        this.levelDao = Object.create(LevelDao);
-        this.levelDao.init(LOCAL, BASE_URL);
+        this.levelDaoClient = Object.create(LevelDaoClient);
+        this.levelDaoClient.init(baseUrl || BASE_URL);
     },
     get: function(levelNumber) {
-        var levelId = LEVEL_PREFIX + pad(levelNumber, PAD, "0");
-        return this.levelDao.fetch(levelId).then(loadLevel.bind(this));
+        return this.levelDaoClient.get(levelNumber).then(loadLevel.bind(this));
     }
 };
 
 function loadLevel(levelData) {
+    if (levelData.complete) {
+        return levelData;
+    }
     var level = Object.create(Level[levelData.type]);
     level.setup(this.context, levelData.data);
     return level;

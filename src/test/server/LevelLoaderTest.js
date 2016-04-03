@@ -1,5 +1,19 @@
-{
-  "tileMap": [
+var test = require('tape'),
+    _ = require('underscore'),
+    LevelLoader = require('../../server/levels/LevelLoader');
+
+test('read level one data from filesystem', function(t) {
+    t.plan(2);
+    LevelLoader.get(1).then(function(levelData) {
+        t.deepEqual(levelData.data, levelOneGameData, "game data");
+        t.deepEqual(levelData.tileMap, levelOneTileMap, "tile map");
+    });
+});
+
+/************/
+/* Level 1 **/
+/************/
+var levelOneTileMap = [
     [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7],
     [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7],
     [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7],
@@ -15,8 +29,9 @@
     [7,7,7,7,7,7,7,7,7,7,7,4,4,3,4,4,7,7,7,7],
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6]
-  ],
-  "data":{
+];
+
+var levelOneGameData = {
     "buildings": [
         {
             "edge": 352,
@@ -58,5 +73,4 @@
             "rows": 7
         }
     ]
-  }
-}
+};

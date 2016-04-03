@@ -1,28 +1,35 @@
 var CanonBall = require('./CanonBall.js');
 
 var Player = {
-    init: function(context, image, posX, posY, lives) {
+    init: function(context, image, posX, posY, lives, ground, baseCanvasHeight) {
         this.context = context;
         this.spriteSheet = image;
         this.lives = lives;
         this.posX = posX;
         this.posY = posY;
+        this.ground = ground;
+        this.baseCanvasHeight = baseCanvasHeight;
+       
+        // defaults, or starting values
+        this.turretPos = 0;
+        this.canonTimer = 0; // controls canon firing interval
         this.alive = true;
+
+        // Configurable, or adjustable by player in game
+        this.canonBallSpeed = 5;
+        this.canonHold = 60; // interval between firing canon balls (2s)
+        this.speed = 2;
+        
+        // Constants 
         this.width = 118;
         this.height = 80;
         this.canonX = 62;
         this.canonY = 29;
         this.hitHeight = 37;
         this.hitWidth = 90;
-        this.turretPos = 0;
         this.turretAngle = -5;
         this.turretLength = 50;
         this.turretCount = 14;
-        this.speed = 2;
-        this.canonTimer = 0;
-        this.canonHold = 60;
-        this.canonBallSpeed = 5;
-        this.ground = 416; // TO-DO: this shouldn't be hard-coded
     },
     increaseCanonBallSpeed: function() {
         this.canonBallSpeed += this.canonBallSpeed < 15 ? 0.2 : 0;
@@ -53,7 +60,7 @@ var Player = {
             var dx = Math.cos(rad) * this.canonBallSpeed;
             var dy = Math.sin(rad) * this.canonBallSpeed;
             var canonBall = Object.create(CanonBall);
-            canonBall.init(this.context, xPos, yPos, dx, dy);
+            canonBall.init(this.context, xPos, yPos, dx, dy, this.baseCanvasHeight);
             return canonBall;
         }
         else {

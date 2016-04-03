@@ -1,13 +1,17 @@
 var Laser = require('./Laser');
 
 var Ufo = {
-    init: function(context, posX, posY, dx, dy, laserFrequency, image) {
+    init: function(context, posX, posY, dx, dy, laserFrequency, image,
+                   baseCanvasWidth, baseCanvasHeight, yBoundary) {
         this.context = context; 
         this.posX = posX;
         this.posY = posY;
         this.dx = dx;
         this.dy = dy;
         this.spriteSheet = image;
+        this.baseCanvasWidth = baseCanvasWidth;
+        this.baseCanvasHeight = baseCanvasHeight;
+        this.yBoundary = yBoundary;
         this.frameIndex = 0;
         this.animationCounter = 0;
         this.width = 119;
@@ -43,14 +47,20 @@ var Ufo = {
             this.animationCounter = 0;
         }
         
-        this.posX += this.forwards ? this.dx : -this.dx;
-        this.poxY += this.up ? this.dy : -this.dy;
-        if (this.posX > this.context.canvas.width - this.width/2) {
+        if (this.posX > this.baseCanvasWidth - this.width/2) {
             this.forwards = false;
         }
         if (this.posX < this.width/2) {
             this.forwards = true;
         }
+        if (this.posY < 0 + this.height) {
+            this.up = false;
+        }
+        if (this.posY > this.yBoundary) {
+            this.up = true;
+        }
+        this.posX += this.forwards ? this.dx : -this.dx;
+        this.posY += this.up ? -this.dy : this.dy;
 
         if (this.laserCounter > this.laserFrequency && 
                 this.posX < buildingBoundary && player.alive) {
@@ -62,7 +72,7 @@ var Ufo = {
             // TO-DO: make a laser object and return it
             var newLaser = Object.create(Laser);
             newLaser.init(this.context, targetX, targetY, sourceX, sourceY, 
-                          this.laserSpeed
+                          this.laserSpeed, this.baseCanvasHeight
             );
             return newLaser;
         }

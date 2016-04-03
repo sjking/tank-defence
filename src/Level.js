@@ -13,6 +13,7 @@ var Level = {
         this.buildings = buildings;
         this.tileSheet = tileSheet;
         this.assets = assets;
+        this.scale = 1.0;
     },
     load: function() {
         var scope = this;
@@ -60,13 +61,13 @@ var Level = {
         return Promise.all(promises);
     },
     draw: function() {
-        var mapRows = 15;
-        var mapCols = 20;
+        var tileSize = 32;
+        var mapRows = this.tileMap.length;
+        var mapCols = this.tileMap[0].length;
         var mapIndexOffset = -1;
         for (var i=0; i < mapRows; i++) {
             for (var j=0; j < mapCols; j++) {
                 var tileId = this.tileMap[i][j] + mapIndexOffset;
-                var tileSize = 32;
                 var sourceX = tileId*tileSize;
                 var sourceY = 0;
                 this.context.drawImage(
@@ -78,7 +79,8 @@ var Level = {
     },
     checkCollision: function(projectile) {
         var p = projectile;
-
+        // Note: the building.y is the position from the top of the canvas, not
+        // the building height
         for (var i=0; i < this.buildings.length; i++) {
             var b = this.buildings[i].bounds; 
             if (p.posX > b.x && p.posX < b.width + b.x && p.posY > b.y) {
@@ -96,11 +98,15 @@ LevelAlpha.setup = function(context, gameData) {
     this.ufos = gameData.ufos;
     this.aliens = gameData.aliens;
     this.explosions = gameData.explosions;
+    this.groundPosX = gameData.groundPosX;
+    this.baseWidth = gameData.width;
+    this.baseHeight = gameData.height;
+    this.aspectRatio = gameData.width / gameData.height;
 
     function mapAssets(gameData) {
         var mapped = [
             gameData.spriteSheet,
-            gameData.player.spriteSheet,
+            gameData.player.spriteSheet
         ];
         
         mapped.push(_.map(gameData.ufos, function(ufo) {
@@ -123,14 +129,12 @@ LevelAlpha.setup = function(context, gameData) {
 };
 
 LevelAlpha.populate = function(assets, playerLives) {
-    // to-do: assign each image to its object (player, ufo, alien), the
-    // building image is already assigned to this level by now
     var images = _.indexBy(assets, 'url');
     
     var player = Object.create(Player);
     var playerImage = images[this.player.spriteSheet].img;
     player.init(this.context, playerImage, this.player.posX, this.player.posY,
-        playerLives
+        playerLives, this.groundPosX, this.baseHeight
     );
     this.player = player;
 
@@ -156,11 +160,13 @@ LevelAlpha.populate = function(assets, playerLives) {
     });
     this.aliens = newAliens;
 
+    var baseWidth = this.baseWidth;
+    var baseHeight = this.baseHeight;
     function makeUfo(ufo) {
         var newUfo = Object.create(Ufo);
         var ufoImage = images[ufo.spriteSheet].img;
         newUfo.init(context, ufo.posX, ufo.posY, ufo.dx, ufo.dy, 
-                ufo.laserFrequency, ufoImage
+                ufo.laserFrequency, ufoImage, baseWidth, baseHeight, ufo.yBoundary || false
         );
         return newUfo;
     }
@@ -182,6 +188,11 @@ LevelAlpha.populate = function(assets, playerLives) {
     this.explosions = explosions;
 
     return Promise.resolve();
+};
+
+LevelAlpha.rescale = function(width, height) {
+    var factor = (width / height < this.aspectRatio) ? (width / this.baseWidth) : (height / this.baseHeight);
+    this.scale = factor;
 };
 
 module.exports = {

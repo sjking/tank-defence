@@ -1,9 +1,10 @@
 var CanonBall = {
-    init: function(context, posX, posY, dx, dy) {
+    init: function(context, posX, posY, dx, dy, baseCanvasHeight) {
         this.posX = posX;
         this.posY = posY;
         this.dx = dx;
         this.dy = dy;
+        this.baseCanvasHeight = baseCanvasHeight;
         this.context = context;
         this.radius = 2;
         this.gravity = 0.2;
@@ -13,7 +14,7 @@ var CanonBall = {
         this.posY += this.dy;
         this.dy += this.gravity;
         
-        return this.posY < this.context.canvas.height;
+        return this.posY < this.baseCanvasHeight;
     },
     draw: function() {
         this.context.fillStyle = "#ffffff";
