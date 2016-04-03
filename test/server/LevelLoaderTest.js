@@ -1,6 +1,6 @@
 var test = require('tape'),
     _ = require('underscore'),
-    LevelLoader = require('../../server/levels/LevelLoader');
+    LevelLoader = require('../.././levels/LevelLoader');
 
 test('read level one data from filesystem', function(t) {
     t.plan(2);
