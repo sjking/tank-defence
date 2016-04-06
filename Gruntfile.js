@@ -4,6 +4,15 @@ module.exports = function(grunt) {
     main: {
       src: 'src/app.js',
       dest: 'tmp/compiled.js'
+    },
+    debug: {
+      src: 'src/app.js',
+      dest: 'server/build/bundle.js',
+      options: {
+        browserifyOptions: {
+          debug: true
+        }
+      }
     }
   });
 
@@ -11,10 +20,9 @@ module.exports = function(grunt) {
   grunt.config('concat', {
     scripts: {
       src: [
-        'bower_components/modernizr/modernizr.js',
-        'tmp/compiled.js'
+        'bower_components/modernizr/modernizr.js'
       ],
-      dest: 'server/build/bundle.js'
+      dest: 'server/build/lib.js'
     }
   });
 
@@ -23,13 +31,13 @@ module.exports = function(grunt) {
     clean: ["tmp"]
   });
 
-  grunt.registerTask('bundle', ['browserify', 'concat:scripts', 'clean']);
+  grunt.registerTask('bundle', ['browserify:main', 'concat:scripts', 'clean']);
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.config('watch', {
     bundle: {
       files: ['src/*.js'],
-      tasks: ['bundle'],
+      tasks: ['browserify:debug', 'concat:scripts'],
       options: {
         spawn: false
       }
@@ -40,7 +48,8 @@ module.exports = function(grunt) {
   grunt.config('uglify', {
     scripts: {
       files: {
-        'server/dist/bundle.js': 'server/build/bundle.js'
+        'server/dist/bundle.js': 'server/build/bundle.js',
+        'server/dist/lib.js': 'server/build/lib.js'
       }
     }
   });

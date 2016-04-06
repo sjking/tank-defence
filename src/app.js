@@ -11,7 +11,8 @@ function eventWindowLoaded() {
 }
 
 function canvasSupport () {
-    return Modernizr.canvas;
+    //return Modernizr.canvas;
+    return true;
 }
 
 function canvasApp() {
