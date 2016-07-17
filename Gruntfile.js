@@ -11,7 +11,7 @@ module.exports = function(grunt) {
   grunt.config('concat', {
     scripts: {
       src: [
-        'bower_components/modernizr/modernizr.js',
+        'server/lib/modernizr.js',
         'tmp/compiled.js'
       ],
       dest: 'server/build/bundle.js'
