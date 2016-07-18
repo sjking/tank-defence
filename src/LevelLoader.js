@@ -1,14 +1,14 @@
 // TO-DO: This is for the client-side, the other LevelLoader will reside on the
 // server. Need to re-organize project.
-var LevelDaoClient = require('./LevelDaoClient'),
+var LevelClient = require('./LevelClient'),
     Level = require('./Level');
 
-const BASE_URL = "http://localhost:3000"; // TO-DO: config
+const BASE_URL = window.location.href;
 
 var LevelLoader = {
     init: function(context, baseUrl) {
         this.context = context;
-        this.levelDaoClient = Object.create(LevelDaoClient);
+        this.levelDaoClient = Object.create(LevelClient);
         this.levelDaoClient.init(baseUrl || BASE_URL);
     },
     get: function(levelNumber) {
