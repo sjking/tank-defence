@@ -281,8 +281,10 @@ function titleScreen() {
 
 function gameOver() {
     if (this.transitionTimer > 0) {
+        this.context.scale(this.viewportScale, this.viewportScale);
         this.transitionScreen.draw("Game Over");
         this.transitionTimer--;
+        this.context.setTransform(1, 0, 0, 1, 0, 0);
     }
     else {
         this.playerLives = STARTING_LIVES;
@@ -292,8 +294,10 @@ function gameOver() {
 
 function complete() {
     if (this.transitionTimer > 0) {
+        this.context.scale(this.viewportScale, this.viewportScale);
         this.transitionScreen.draw("Congratulations, You Win!");
         this.transitionTimer--;
+        this.context.setTransform(1, 0, 0, 1, 0, 0);
     }
     else {
         this.gameState = GAME_STATE.TITLE_SCREEN;
@@ -301,14 +305,18 @@ function complete() {
 }
 
 function transition(text) {
+    this.context.scale(this.viewportScale, this.viewportScale);
     this.transitionScreen.draw(text);
     this.transitionTimer > 0 && this.transitionTimer--;
+    this.context.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 function ready() {
     if (this.transitionTimer > 0) {
+        this.context.scale(this.viewportScale, this.viewportScale);
         this.transitionScreen.draw("Level " + this.currentLevel);
         this.transitionTimer--;
+        this.context.setTransform(1, 0, 0, 1, 0, 0);
     }
     else {
         this.gameState = GAME_STATE.PLAY;
@@ -339,7 +347,7 @@ var Game = {
         this.keyPressList = keyPressList;
         this.transitionTime = FRAME_RATE * 2; // 2 seconds
         this.transitionScreen = Object.create(TransitionScreen);
-        this.transitionScreen.init(context);
+        this.transitionScreen.init(context, BASE_VIEWPORT_WIDTH, BASE_VIEWPORT_HEIGHT);
         this.levelLoader = Object.create(LevelLoader);
         this.levelLoader.init(context);
         this.playerLives = STARTING_LIVES;

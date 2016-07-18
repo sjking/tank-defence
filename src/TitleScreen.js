@@ -1,9 +1,9 @@
 const SELECTED_BUTTON_COLOR = "#ffff00";
-const DEFAULT_BUTTON_COLOR = "#eee";
+const DEFAULT_BUTTON_COLOR = "#EE7600";
 const CONTROLS_COLOR = "#d3d";
 const BACKGROUND_COLOR = "#000";
 const REGULAR_FONT = "12pt Arial";
-const LARGE_FONT = "36pt Arial";
+const LARGE_FONT = "48pt Arial";
 const SMALL_FONT = "10pt Arial";
 const CONTROLS_FONT = "10pt monospace";
 
