@@ -4,8 +4,15 @@ module.exports = function(grunt) {
     main: {
       src: 'src/app.js',
       dest: 'tmp/compiled.js'
+    },
+    debug: {
+      src: 'src/app.js',
+      dest: 'tmp/compiled.js',
+      options: { browserifyOptions: { debug: true } }
     }
   });
+
+  grunt.registerTask('debug', ['browserify:debug', 'concat:scripts', 'clean']);
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.config('concat', {
@@ -30,6 +37,13 @@ module.exports = function(grunt) {
     bundle: {
       files: ['src/*.js'],
       tasks: ['bundle'],
+      options: {
+        spawn: false
+      }
+    },
+    debug: {
+      files: ['src/*.js'],
+      tasks: ['debug'],
       options: {
         spawn: false
       }
