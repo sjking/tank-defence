@@ -12,11 +12,11 @@ const keys = {
 var keyCodeMap = {
     '37': keys.LEFT,
     '39': keys.RIGHT,
-    '38': keys.UP,
-    '40': keys.DOWN,
+    '87': keys.UP,
+    '83': keys.DOWN,
     '32': keys.ACTION,
-    '188': keys.DECREASE_POWER,
-    '190': keys.INCREASE_POWER,
+    '65': keys.DECREASE_POWER,
+    '68': keys.INCREASE_POWER,
     '13': keys.START
 };
 
