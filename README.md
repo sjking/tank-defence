@@ -10,3 +10,10 @@ An HTML5 canvas game. The purpose of the game is to destroy the aliens invading 
 4. Start the application: `npm start`
 
 The game will start an express.js server listening on localhost at port 3000. Point you browser to `http://127.0.0.1:3000` to start the game.
+
+## Development
+
+There are some grunt tasks to help with development:
+
+1. `grunt watch:debug`: Watches for changes in the *src* directory, and compiles with debugging flags.
+2. `grunt debug`: Compiles using the `--debug` option in browserify, which is useful for browser debugging.
