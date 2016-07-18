@@ -22,7 +22,10 @@ app.get('/level', function(req, res) {
     });
 });
 
-const PORT = 3000;
+var PORT = 3000;
+if (process.env.TANK_DEFENCE_PORT) {
+  PORT = process.env.TANK_DEFENCE_PORT;
+}
 
 app.listen(PORT, function () {
     console.log("Tank Defence, © 2016 codecity.ca");
