@@ -240,9 +240,6 @@ function detectKeyPresses() {
     if (keys[keyCode.DECREASE_POWER]) {
         this.level.player.decreaseCanonBallSpeed();
     }
-    if (keys[keyCode.START]) {
-
-    }
 }
 
 function detectKeyPressesTitleScreen() {
@@ -250,7 +247,8 @@ function detectKeyPressesTitleScreen() {
     
     if (keys[keyCode.START]) {
         this.currentLevel = 1;
-        loadLevel.call(this, 1); // TO-DO: Load other levels
+        loadLevel.call(this, 1);
+        this.gameState = GAME_STATE.NEXT_LEVEL;
     }
     // TO-DO: Detect mouse events, and arrow keys
 }
@@ -343,7 +341,7 @@ var Game = {
         this.transitionScreen = Object.create(TransitionScreen);
         this.transitionScreen.init(context);
         this.levelLoader = Object.create(LevelLoader);
-        this.levelLoader.init(context); // TO-DO: config base url
+        this.levelLoader.init(context);
         this.playerLives = STARTING_LIVES;
         this.windowOnResize = windowOnResize;
         this.canvasResizer = resizeCanvas;
