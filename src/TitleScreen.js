@@ -3,7 +3,7 @@ const DEFAULT_BUTTON_COLOR = "#eee";
 const CONTROLS_COLOR = "#d3d";
 const BACKGROUND_COLOR = "#000";
 const REGULAR_FONT = "12pt Arial";
-const LARGE_FONT = "16pt Arial";
+const LARGE_FONT = "36pt Arial";
 const SMALL_FONT = "10pt Arial";
 const CONTROLS_FONT = "10pt monospace";
 
