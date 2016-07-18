@@ -8,16 +8,16 @@ const BASE_URL = window.location.href;
 var LevelLoader = {
     init: function(context, baseUrl) {
         this.context = context;
-        this.levelDaoClient = Object.create(LevelClient);
-        this.levelDaoClient.init(baseUrl || BASE_URL);
+        this.levelClient = Object.create(LevelClient);
+        this.levelClient.init(baseUrl || BASE_URL);
     },
     get: function(levelNumber) {
-        return this.levelDaoClient.get(levelNumber).then(loadLevel.bind(this));
+        return this.levelClient.get(levelNumber).then(loadLevel.bind(this));
     }
 };
 
 function loadLevel(levelData) {
-    if (levelData.complete) {
+    if (levelData.complete) { // complete flag is returned when all levels have been completed
         return levelData;
     }
     var level = Object.create(Level[levelData.type]);

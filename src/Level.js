@@ -39,9 +39,12 @@ var Level = {
         });
         if (cache[scope.tileSheet]) {
             scope.image = cache[scope.tileSheet];
-            promises.push(Promise.resolve(
-                        { url: scope.tileSheet, img: cache[scope.tileSheet] })
-                    );
+            promises.push(
+                Promise.resolve({
+                    url: scope.tileSheet,
+                    img: cache[scope.tileSheet]
+                })
+            );
         }
         else {
             var fetch = new Promise(function(resolve,reject) {
