@@ -30,7 +30,7 @@ module.exports = function(grunt) {
     clean: ["tmp"]
   });
 
-  grunt.registerTask('bundle', ['browserify', 'concat:scripts', 'clean']);
+  grunt.registerTask('bundle', ['browserify:main', 'concat:scripts', 'clean']);
 
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.config('watch', {
