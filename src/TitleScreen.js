@@ -6,6 +6,7 @@ const REGULAR_FONT = "12pt Arial";
 const LARGE_FONT = "48pt Arial";
 const SMALL_FONT = "10pt Arial";
 const CONTROLS_FONT = "10pt monospace";
+const VERSION = "0.3.0";
 
 var TitleScreen = {
     init: function(context, baseWidth, baseHeight) {
@@ -13,7 +14,7 @@ var TitleScreen = {
         this.baseWidth = baseWidth;
         this.baseHeight = baseHeight;
         this.title = "Tank Defence";
-        this.subtitle = "© 2016 codecity.ca";
+        this.subtitle = "Version " + VERSION + " © 2016 codecity.ca";
         this.startButton = createButton(context, "Press ↳ENTER to Start Game",
                 this.baseWidth/2, this.baseHeight/2);
 
