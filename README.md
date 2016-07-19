@@ -19,5 +19,5 @@ The game will start an express.js server listening on localhost at port 3000. Po
 
 There are some grunt tasks to help with development:
 
-1. `grunt watch:debug`: Watches for changes in the *src* directory, and compiles with debugging flags.
-2. `grunt debug`: Compiles using the `--debug` option in browserify, which is useful for browser debugging.
+1. `grunt watch:debug`: Watches for changes in the *src* directory, and compiles with source maps.
+2. `grunt debug`: Compiles using the `--debug` option in browserify, which compiles with source maps, and is useful for browser debugging.
