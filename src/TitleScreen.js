@@ -40,8 +40,8 @@ var TitleScreen = {
         this.context.fillText("Controls", this.baseWidth/2, this.baseHeight*23/32);
         this.context.textAlign = "left";
         this.context.font = CONTROLS_FONT;
-        this.context.fillText("A         | Increase Canon Power", this.baseWidth/3, this.baseHeight*25/32);
-        this.context.fillText("D         | Decrease Canon Power", this.baseWidth/3, this.baseHeight*26/32);
+        this.context.fillText("A         | Decrease Canon Power", this.baseWidth/3, this.baseHeight*25/32);
+        this.context.fillText("D         | Increase Canon Power", this.baseWidth/3, this.baseHeight*26/32);
         this.context.fillText("W         | Turret Up", this.baseWidth/3, this.baseHeight*27/32);
         this.context.fillText("S         | Turret Down", this.baseWidth/3, this.baseHeight*28/32);
         this.context.fillText("⇨         | Move Right", this.baseWidth/3, this.baseHeight*29/32);
